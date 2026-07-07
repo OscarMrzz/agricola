@@ -4,13 +4,11 @@ import java.awt.Component;
 
 import com.mycompany.agricola.controllers.AlertasController;
 import com.mycompany.agricola.controllers.inventario.InventarioListadoController;
-import com.mycompany.agricola.services.NavegacionService;
 import com.mycompany.agricola.views.ventas.HomeVentasVista;
 import com.mycompany.agricola.views.ventas.InventarioVentasVista;
 
 public class HomeVentasController {
 
-    private final NavegacionService navegacion = new NavegacionService();
     private final VentasController ventasController = new VentasController();
     private final FormularioAgregarVentaController formularioAgregarController = new FormularioAgregarVentaController();
     private final ClientesVentasController clientesVentasController = new ClientesVentasController();

@@ -12,21 +12,42 @@ import com.mycompany.agricola.views.util.UiUtil;
 
 public class NavegacionService {
 
-    private final HomeAdminController homeAdminController = new HomeAdminController();
-    private final HomeVentasController homeVentasController = new HomeVentasController();
-    private final HomeComprasController homeComprasController = new HomeComprasController();
+    private HomeAdminController homeAdminController;
+    private HomeVentasController homeVentasController;
+    private HomeComprasController homeComprasController;
 
     public JPanel determinarHomeInicial() {
         String rol = AuthService.getRolNombre();
         if (rol == null) {
-            return homeVentasController.crearVista();
+            return getHomeVentasController().crearVista();
         }
         return switch (rol) {
-            case "Administrador" -> homeAdminController.crearVista();
-            case "Vendedor" -> homeVentasController.crearVista();
-            case "Compras" -> homeComprasController.crearVista();
-            default -> homeVentasController.crearVista();
+            case "Administrador" -> getHomeAdminController().crearVista();
+            case "Vendedor" -> getHomeVentasController().crearVista();
+            case "Compras" -> getHomeComprasController().crearVista();
+            default -> getHomeVentasController().crearVista();
         };
+    }
+
+    private HomeAdminController getHomeAdminController() {
+        if (homeAdminController == null) {
+            homeAdminController = new HomeAdminController();
+        }
+        return homeAdminController;
+    }
+
+    private HomeVentasController getHomeVentasController() {
+        if (homeVentasController == null) {
+            homeVentasController = new HomeVentasController();
+        }
+        return homeVentasController;
+    }
+
+    private HomeComprasController getHomeComprasController() {
+        if (homeComprasController == null) {
+            homeComprasController = new HomeComprasController();
+        }
+        return homeComprasController;
     }
 
     public boolean abrirVistaSiPermitida(String nombreVista, JPanel panel) {

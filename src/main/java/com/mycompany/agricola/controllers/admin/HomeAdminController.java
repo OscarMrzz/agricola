@@ -9,12 +9,10 @@ import com.mycompany.agricola.controllers.admin.productos.ProductosController;
 import com.mycompany.agricola.controllers.admin.usuarios.UsuariosController;
 import com.mycompany.agricola.controllers.compras.HomeComprasController;
 import com.mycompany.agricola.controllers.ventas.HomeVentasController;
-import com.mycompany.agricola.services.NavegacionService;
 import com.mycompany.agricola.views.admin.HomeAdminVista;
 
 public class HomeAdminController {
 
-    private final NavegacionService navegacion = new NavegacionService();
     private final HomeVentasController ventasController = new HomeVentasController();
     private final HomeComprasController comprasController = new HomeComprasController();
     private final UsuariosController usuariosController = new UsuariosController();
