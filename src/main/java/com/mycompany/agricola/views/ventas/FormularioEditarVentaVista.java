@@ -1,107 +1,69 @@
 package com.mycompany.agricola.views.ventas;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import com.mycompany.agricola.controllers.ventas.FormularioEditarVentaController;
-import com.mycompany.agricola.model.entity.VentaEntity;
 import com.mycompany.agricola.views.util.UiIcons;
 import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarVentaVista extends javax.swing.JPanel {
 
-    private final FormularioEditarVentaController controller = new FormularioEditarVentaController();
-    private VentaEntity venta;
+    public javax.swing.JButton botonCancelar;
+    public javax.swing.JButton botonGuardar;
+    public javax.swing.JComboBox<String> comboboxMetodoPago;
+    public javax.swing.JLabel etiquetaCantidad;
+    public javax.swing.JLabel etiquetaError;
+    public javax.swing.JLabel etiquetaMetodoPago;
+    public javax.swing.JLabel etiquetaTitulo;
+    public javax.swing.JTextField inputCantidad;
 
-    public FormularioEditarVentaVista(int id) {
+    private javax.swing.JPanel panelBotones;
+    private javax.swing.JPanel panelFormulario;
+
+    public FormularioEditarVentaVista() {
         initComponents();
         aplicarEstilos();
-        inicializarLogica(id);
     }
 
     private void aplicarEstilos() {
         UiStyle.aplicarPagina(this);
-        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarTitulo(etiquetaTitulo);
         UiStyle.estilizarFormPanel(panelFormulario, "Datos");
-        UiStyle.estilizarError(lblError);
-        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
-        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
-        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
-        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
-        UiStyle.estilizarCuerpo(lblCantidad);
-        UiStyle.estilizarInput(txtCantidad);
-        UiStyle.estilizarCuerpo(lblMetodoPago);
-        UiStyle.estilizarInput(cmbMetodoPago);
-    }
-
-    private void inicializarLogica(int id) {
-        btnGuardar.addActionListener(e -> guardar());
-        btnCancelar.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
-
-        venta = controller.obtenerPorId(id);
-        if (venta == null) {
-            panelFormulario.setVisible(false);
-            lblError.setText("Venta no encontrada");
-            lblError.setVisible(true);
-            btnGuardar.setEnabled(false);
-            return;
-        }
-
-        txtCantidad.setText(String.valueOf(venta.getCantidadProducto()));
-        cmbMetodoPago.setSelectedItem(venta.getMetodoPago());
-    }
-
-    private void guardar() {
-        try {
-            int cantidad = Integer.parseInt(txtCantidad.getText().trim());
-            if (cantidad <= 0) {
-                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a cero");
-                return;
-            }
-            venta.setCantidadProducto(cantidad);
-            String metodo = (String) cmbMetodoPago.getSelectedItem();
-            venta.setMetodoPago(metodo);
-            venta.setTipo(metodo);
-            var resultado = controller.actualizar(venta);
-            if (resultado.isExito()) {
-                JOptionPane.showMessageDialog(this, "Venta actualizada correctamente");
-                SwingUtilities.getWindowAncestor(this).dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, resultado.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Cantidad invalida");
-        }
+        UiStyle.estilizarError(etiquetaError);
+        UiStyle.estilizarBoton(botonGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(botonCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(botonGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(botonCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(etiquetaCantidad);
+        UiStyle.estilizarInput(inputCantidad);
+        UiStyle.estilizarCuerpo(etiquetaMetodoPago);
+        UiStyle.estilizarInput(comboboxMetodoPago);
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitulo = new javax.swing.JLabel();
-        lblError = new javax.swing.JLabel();
+        etiquetaTitulo = new javax.swing.JLabel();
+        etiquetaError = new javax.swing.JLabel();
         panelFormulario = new javax.swing.JPanel();
-        lblCantidad = new javax.swing.JLabel();
-        txtCantidad = new javax.swing.JTextField();
-        lblMetodoPago = new javax.swing.JLabel();
-        cmbMetodoPago = new javax.swing.JComboBox<>();
+        etiquetaCantidad = new javax.swing.JLabel();
+        inputCantidad = new javax.swing.JTextField();
+        etiquetaMetodoPago = new javax.swing.JLabel();
+        comboboxMetodoPago = new javax.swing.JComboBox<>();
         panelBotones = new javax.swing.JPanel();
-        btnGuardar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        botonGuardar = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setText("Editar Venta");
+        etiquetaTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
+        etiquetaTitulo.setText("Editar Venta");
 
-        lblError.setForeground(new java.awt.Color(204, 0, 0));
-        lblError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblError.setText(" ");
-        lblError.setVisible(false);
+        etiquetaError.setForeground(new java.awt.Color(204, 0, 0));
+        etiquetaError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        etiquetaError.setText(" ");
+        etiquetaError.setVisible(false);
 
-        lblCantidad.setText("Cantidad:");
+        etiquetaCantidad.setText("Cantidad:");
 
-        lblMetodoPago.setText("Metodo de pago:");
+        etiquetaMetodoPago.setText("Metodo de pago:");
 
-        cmbMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "contado", "credito" }));
+        comboboxMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "contado", "credito" }));
 
         javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
         panelFormulario.setLayout(panelFormularioLayout);
@@ -110,12 +72,12 @@ public class FormularioEditarVentaVista extends javax.swing.JPanel {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                    .addComponent(lblMetodoPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(etiquetaCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(etiquetaMetodoPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboboxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelFormularioLayout.setVerticalGroup(
@@ -123,18 +85,18 @@ public class FormularioEditarVentaVista extends javax.swing.JPanel {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCantidad)
-                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaCantidad)
+                    .addComponent(inputCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMetodoPago)
-                    .addComponent(cmbMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaMetodoPago)
+                    .addComponent(comboboxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnGuardar.setText("Guardar");
+        botonGuardar.setText("Guardar");
 
-        btnCancelar.setText("Cancelar");
+        botonCancelar.setText("Cancelar");
 
         javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
         panelBotones.setLayout(panelBotonesLayout);
@@ -142,15 +104,15 @@ public class FormularioEditarVentaVista extends javax.swing.JPanel {
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBotonesLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnGuardar)
+                .addComponent(botonGuardar)
                 .addGap(8, 8, 8)
-                .addComponent(btnCancelar))
+                .addComponent(botonCancelar))
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(btnGuardar)
-                .addComponent(btnCancelar))
+                .addComponent(botonGuardar)
+                .addComponent(botonCancelar))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -160,8 +122,8 @@ public class FormularioEditarVentaVista extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addComponent(lblError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(etiquetaTitulo)
+                    .addComponent(etiquetaError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
@@ -170,27 +132,14 @@ public class FormularioEditarVentaVista extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
+                .addComponent(etiquetaTitulo)
                 .addGap(18, 18, 18)
-                .addComponent(lblError)
+                .addComponent(etiquetaError)
                 .addGap(18, 18, 18)
                 .addComponent(panelFormulario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> cmbMetodoPago;
-    private javax.swing.JLabel lblCantidad;
-    private javax.swing.JLabel lblError;
-    private javax.swing.JLabel lblMetodoPago;
-    private javax.swing.JLabel lblTitulo;
-    private javax.swing.JPanel panelBotones;
-    private javax.swing.JPanel panelFormulario;
-    private javax.swing.JTextField txtCantidad;
-    // End of variables declaration//GEN-END:variables
+    }
 }

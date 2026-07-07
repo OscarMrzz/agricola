@@ -1,93 +1,62 @@
 package com.mycompany.agricola.views.admin.productos;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import com.mycompany.agricola.controllers.admin.productos.FormularioAgregarProductoController;
-import com.mycompany.agricola.model.entity.ProductoEntity;
 import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioAgregarProductoVista extends javax.swing.JPanel {
 
-    private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-    private final FormularioAgregarProductoController controller = new FormularioAgregarProductoController();
+    public javax.swing.JButton botonCancelar;
+    public javax.swing.JButton botonGuardar;
+    public javax.swing.JLabel etiquetaCategoria;
+    public javax.swing.JLabel etiquetaDepartamento;
+    public javax.swing.JLabel etiquetaNombre;
+    public javax.swing.JLabel etiquetaPrecio;
+    public javax.swing.JLabel etiquetaTitulo;
+    public javax.swing.JLabel etiquetaVencimiento;
+    public javax.swing.JTextField inputCategoria;
+    public javax.swing.JTextField inputDepartamento;
+    public javax.swing.JTextField inputNombre;
+    public javax.swing.JTextField inputPrecio;
+    public javax.swing.JTextField inputVencimiento;
 
     public FormularioAgregarProductoVista() {
         initComponents();
         aplicarEstilos();
-        inicializarLogica();
     }
 
     private void aplicarEstilos() {
-        UiStyle.aplicarVistaFormulario(this, lblTitulo, btnGuardar, btnCancelar,
-                lblNombre, txtNombre, lblCategoria, txtCategoria,
-                lblDepartamento, txtDepartamento, lblPrecio, txtPrecio,
-                lblVencimiento, txtVencimiento);
-    }
-
-    private void inicializarLogica() {
-        txtVencimiento.setText(LocalDateTime.now().plusYears(1).format(FECHA_FORMATO));
-        btnGuardar.addActionListener(e -> guardar());
-        btnCancelar.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
-    }
-
-    private void guardar() {
-        try {
-            ProductoEntity producto = new ProductoEntity();
-            producto.setNombreProducto(txtNombre.getText().trim());
-            producto.setCategoriaProducto(txtCategoria.getText().trim());
-            producto.setDepartamentoOrigen(txtDepartamento.getText().trim());
-            producto.setPrecioVenta(new BigDecimal(txtPrecio.getText().trim()));
-            producto.setFechaVencimiento(LocalDateTime.parse(txtVencimiento.getText().trim(), FECHA_FORMATO));
-
-            var resultado = controller.crear(producto);
-            if (resultado.isExito()) {
-                JOptionPane.showMessageDialog(this, "Producto creado correctamente");
-                SwingUtilities.getWindowAncestor(this).dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, resultado.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Precio invalido");
-        } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(this, "Fecha de vencimiento invalida");
-        }
+        UiStyle.aplicarVistaFormulario(this, etiquetaTitulo, botonGuardar, botonCancelar,
+                etiquetaNombre, inputNombre, etiquetaCategoria, inputCategoria,
+                etiquetaDepartamento, inputDepartamento, etiquetaPrecio, inputPrecio,
+                etiquetaVencimiento, inputVencimiento);
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitulo = new javax.swing.JLabel();
-        lblNombre = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
-        lblCategoria = new javax.swing.JLabel();
-        txtCategoria = new javax.swing.JTextField();
-        lblDepartamento = new javax.swing.JLabel();
-        txtDepartamento = new javax.swing.JTextField();
-        lblPrecio = new javax.swing.JLabel();
-        txtPrecio = new javax.swing.JTextField();
-        lblVencimiento = new javax.swing.JLabel();
-        txtVencimiento = new javax.swing.JTextField();
-        btnGuardar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        etiquetaTitulo = new javax.swing.JLabel();
+        etiquetaNombre = new javax.swing.JLabel();
+        inputNombre = new javax.swing.JTextField();
+        etiquetaCategoria = new javax.swing.JLabel();
+        inputCategoria = new javax.swing.JTextField();
+        etiquetaDepartamento = new javax.swing.JLabel();
+        inputDepartamento = new javax.swing.JTextField();
+        etiquetaPrecio = new javax.swing.JLabel();
+        inputPrecio = new javax.swing.JTextField();
+        etiquetaVencimiento = new javax.swing.JLabel();
+        inputVencimiento = new javax.swing.JTextField();
+        botonGuardar = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setText("Agregar producto");
+        etiquetaTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
+        etiquetaTitulo.setText("Agregar producto");
 
-        lblNombre.setText("Nombre:");
-        lblCategoria.setText("Categoria:");
-        lblDepartamento.setText("Departamento:");
-        lblPrecio.setText("Precio venta:");
-        lblVencimiento.setText("Vencimiento:");
-        btnGuardar.setText("Guardar");
-        btnCancelar.setText("Cancelar");
+        etiquetaNombre.setText("Nombre:");
+        etiquetaCategoria.setText("Categoria:");
+        etiquetaDepartamento.setText("Departamento:");
+        etiquetaPrecio.setText("Precio venta:");
+        etiquetaVencimiento.setText("Vencimiento:");
+        botonGuardar.setText("Guardar");
+        botonCancelar.setText("Cancelar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -96,79 +65,63 @@ public class FormularioAgregarProductoVista extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
+                    .addComponent(etiquetaTitulo)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addComponent(inputNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addComponent(inputCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtDepartamento, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addComponent(inputDepartamento, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inputPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addComponent(inputVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnGuardar)
+                        .addComponent(botonGuardar)
                         .addGap(8, 8, 8)
-                        .addComponent(btnCancelar)))
+                        .addComponent(botonCancelar)))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
+                .addComponent(etiquetaTitulo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNombre)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaNombre)
+                    .addComponent(inputNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCategoria)
-                    .addComponent(txtCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaCategoria)
+                    .addComponent(inputCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDepartamento)
-                    .addComponent(txtDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaDepartamento)
+                    .addComponent(inputDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPrecio)
-                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaPrecio)
+                    .addComponent(inputPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblVencimiento)
-                    .addComponent(txtVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaVencimiento)
+                    .addComponent(inputVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(botonGuardar)
+                    .addComponent(botonCancelar))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JLabel lblCategoria;
-    private javax.swing.JLabel lblDepartamento;
-    private javax.swing.JLabel lblNombre;
-    private javax.swing.JLabel lblPrecio;
-    private javax.swing.JLabel lblTitulo;
-    private javax.swing.JLabel lblVencimiento;
-    private javax.swing.JTextField txtCategoria;
-    private javax.swing.JTextField txtDepartamento;
-    private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtPrecio;
-    private javax.swing.JTextField txtVencimiento;
-    // End of variables declaration//GEN-END:variables
+    }
 }

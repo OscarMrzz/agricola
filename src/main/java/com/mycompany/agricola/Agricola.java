@@ -7,8 +7,7 @@ import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.mycompany.agricola.controllers.InicializacionController;
-import com.mycompany.agricola.views.InicializacionVista;
-import com.mycompany.agricola.views.LoginVista;
+import com.mycompany.agricola.controllers.LoginController;
 import com.mycompany.agricola.views.util.UiUtil;
 
 public class Agricola {
@@ -20,11 +19,12 @@ public class Agricola {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             InicializacionController inicializacionController = new InicializacionController();
+            LoginController loginController = new LoginController();
             if (inicializacionController.baseDeDatosInicializada()) {
-                UiUtil.mostrarVistaEnFrame(frame, new LoginVista(), "Distribuidora Agricola - Login",
+                UiUtil.mostrarVistaEnFrame(frame, loginController.crearVista(), "Distribuidora Agricola - Login",
                         new Dimension(480, 300));
             } else {
-                UiUtil.mostrarVistaEnFrame(frame, new InicializacionVista(frame),
+                UiUtil.mostrarVistaEnFrame(frame, inicializacionController.crearVista(frame),
                         "Distribuidora Agricola - Inicializacion", new Dimension(520, 280));
             }
 

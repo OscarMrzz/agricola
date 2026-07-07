@@ -1,99 +1,72 @@
 package com.mycompany.agricola.views.admin.inventario;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import com.mycompany.agricola.controllers.admin.inventario.FormularioEditarInventarioController;
-import com.mycompany.agricola.model.entity.InventarioEntity;
 import com.mycompany.agricola.views.util.UiIcons;
 import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarInventarioVista extends javax.swing.JPanel {
 
-    private final FormularioEditarInventarioController controller = new FormularioEditarInventarioController();
-    private InventarioEntity inventario;
+    public javax.swing.JButton botonCancelar;
+    public javax.swing.JButton botonGuardar;
+    public javax.swing.JLabel etiquetaIdProducto;
+    public javax.swing.JLabel etiquetaIdProductoValor;
+    public javax.swing.JLabel etiquetaNoEncontrado;
+    public javax.swing.JLabel etiquetaStockActual;
+    public javax.swing.JLabel etiquetaStockActualValor;
+    public javax.swing.JLabel etiquetaStockMinimo;
+    public javax.swing.JLabel etiquetaTitulo;
+    public javax.swing.JPanel panelFormulario;
+    public javax.swing.JTextField inputStockMinimo;
 
-    public FormularioEditarInventarioVista(int id) {
+    public FormularioEditarInventarioVista() {
         initComponents();
         aplicarEstilos();
-        inventario = controller.obtenerPorId(id);
-        if (inventario == null) {
-            panelFormulario.setVisible(false);
-            lblNoEncontrado.setVisible(true);
-        } else {
-            inicializarLogica();
-        }
     }
 
     private void aplicarEstilos() {
         UiStyle.aplicarPagina(this);
-        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarTitulo(etiquetaTitulo);
         UiStyle.estilizarFormPanel(panelFormulario, "Datos");
-        UiStyle.estilizarError(lblNoEncontrado);
-        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
-        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
-        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
-        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
-        UiStyle.estilizarCuerpo(lblIdProducto);
-        UiStyle.estilizarCuerpo(lblIdProductoValor);
-        UiStyle.estilizarCuerpo(lblStockActual);
-        UiStyle.estilizarCuerpo(lblStockActualValor);
-        UiStyle.estilizarCuerpo(lblStockMinimo);
-        UiStyle.estilizarInput(txtStockMinimo);
-    }
-
-    private void inicializarLogica() {
-        lblIdProductoValor.setText(String.valueOf(inventario.getIdProducto()));
-        lblStockActualValor.setText(String.valueOf(inventario.getStock()));
-        txtStockMinimo.setText(String.valueOf(inventario.getStockMinimo()));
-        btnGuardar.addActionListener(e -> guardar());
-        btnCancelar.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
-    }
-
-    private void guardar() {
-        try {
-            int stockMinimo = Integer.parseInt(txtStockMinimo.getText().trim());
-            var resultado = controller.actualizarStockMinimo(inventario.getIdProducto(), stockMinimo);
-            if (resultado.isExito()) {
-                JOptionPane.showMessageDialog(this, "Stock minimo actualizado correctamente");
-                SwingUtilities.getWindowAncestor(this).dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, resultado.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Stock minimo invalido");
-        }
+        UiStyle.estilizarError(etiquetaNoEncontrado);
+        UiStyle.estilizarBoton(botonGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(botonCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(botonGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(botonCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(etiquetaIdProducto);
+        UiStyle.estilizarCuerpo(etiquetaIdProductoValor);
+        UiStyle.estilizarCuerpo(etiquetaStockActual);
+        UiStyle.estilizarCuerpo(etiquetaStockActualValor);
+        UiStyle.estilizarCuerpo(etiquetaStockMinimo);
+        UiStyle.estilizarInput(inputStockMinimo);
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblNoEncontrado = new javax.swing.JLabel();
+        etiquetaNoEncontrado = new javax.swing.JLabel();
         panelFormulario = new javax.swing.JPanel();
-        lblTitulo = new javax.swing.JLabel();
-        lblIdProducto = new javax.swing.JLabel();
-        lblIdProductoValor = new javax.swing.JLabel();
-        lblStockActual = new javax.swing.JLabel();
-        lblStockActualValor = new javax.swing.JLabel();
-        lblStockMinimo = new javax.swing.JLabel();
-        txtStockMinimo = new javax.swing.JTextField();
-        btnGuardar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        etiquetaTitulo = new javax.swing.JLabel();
+        etiquetaIdProducto = new javax.swing.JLabel();
+        etiquetaIdProductoValor = new javax.swing.JLabel();
+        etiquetaStockActual = new javax.swing.JLabel();
+        etiquetaStockActualValor = new javax.swing.JLabel();
+        etiquetaStockMinimo = new javax.swing.JLabel();
+        inputStockMinimo = new javax.swing.JTextField();
+        botonGuardar = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
 
-        lblNoEncontrado.setText("Inventario no encontrado");
-        lblNoEncontrado.setVisible(false);
+        etiquetaNoEncontrado.setText("Inventario no encontrado");
+        etiquetaNoEncontrado.setVisible(false);
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setText("Editar stock minimo");
+        etiquetaTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
+        etiquetaTitulo.setText("Editar stock minimo");
 
-        lblIdProducto.setText("ID Producto:");
-        lblIdProductoValor.setText("-");
-        lblStockActual.setText("Stock actual:");
-        lblStockActualValor.setText("-");
-        lblStockMinimo.setText("Stock minimo:");
-        btnGuardar.setText("Guardar");
-        btnCancelar.setText("Cancelar");
+        etiquetaIdProducto.setText("ID Producto:");
+        etiquetaIdProductoValor.setText("-");
+        etiquetaStockActual.setText("Stock actual:");
+        etiquetaStockActualValor.setText("-");
+        etiquetaStockMinimo.setText("Stock minimo:");
+        botonGuardar.setText("Guardar");
+        botonCancelar.setText("Cancelar");
 
         javax.swing.GroupLayout panelFormularioLayout = new javax.swing.GroupLayout(panelFormulario);
         panelFormulario.setLayout(panelFormularioLayout);
@@ -102,46 +75,46 @@ public class FormularioEditarInventarioVista extends javax.swing.JPanel {
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
+                    .addComponent(etiquetaTitulo)
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(lblIdProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaIdProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(lblIdProductoValor))
+                        .addComponent(etiquetaIdProductoValor))
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(lblStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaStockActual, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(lblStockActualValor))
+                        .addComponent(etiquetaStockActualValor))
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(lblStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inputStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelFormularioLayout.createSequentialGroup()
-                        .addComponent(btnGuardar)
+                        .addComponent(botonGuardar)
                         .addGap(8, 8, 8)
-                        .addComponent(btnCancelar)))
+                        .addComponent(botonCancelar)))
                 .addGap(20, 20, 20))
         );
         panelFormularioLayout.setVerticalGroup(
             panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormularioLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
+                .addComponent(etiquetaTitulo)
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblIdProducto)
-                    .addComponent(lblIdProductoValor))
+                    .addComponent(etiquetaIdProducto)
+                    .addComponent(etiquetaIdProductoValor))
                 .addGap(12, 12, 12)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblStockActual)
-                    .addComponent(lblStockActualValor))
+                    .addComponent(etiquetaStockActual)
+                    .addComponent(etiquetaStockActualValor))
                 .addGap(12, 12, 12)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblStockMinimo)
-                    .addComponent(txtStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaStockMinimo)
+                    .addComponent(inputStockMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(botonGuardar)
+                    .addComponent(botonCancelar))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -149,27 +122,13 @@ public class FormularioEditarInventarioVista extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblNoEncontrado)
+            .addComponent(etiquetaNoEncontrado)
             .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblNoEncontrado)
+            .addComponent(etiquetaNoEncontrado)
             .addComponent(panelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JLabel lblIdProducto;
-    private javax.swing.JLabel lblIdProductoValor;
-    private javax.swing.JLabel lblNoEncontrado;
-    private javax.swing.JLabel lblStockActual;
-    private javax.swing.JLabel lblStockActualValor;
-    private javax.swing.JLabel lblStockMinimo;
-    private javax.swing.JLabel lblTitulo;
-    private javax.swing.JPanel panelFormulario;
-    private javax.swing.JTextField txtStockMinimo;
-    // End of variables declaration//GEN-END:variables
+    }
 }

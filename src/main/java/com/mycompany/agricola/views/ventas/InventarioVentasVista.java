@@ -1,84 +1,26 @@
 package com.mycompany.agricola.views.ventas;
 
-import java.time.format.DateTimeFormatter;
+import com.mycompany.agricola.controllers.inventario.InventarioListadoController;
 
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-
-import com.mycompany.agricola.controllers.ventas.InventarioVentasController;
-import com.mycompany.agricola.model.entity.InventarioEntity;
-import com.mycompany.agricola.views.util.UiIcons;
-import com.mycompany.agricola.views.util.UiStyle;
-
-public class InventarioVentasVista extends javax.swing.JPanel {
-
-    private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    private final InventarioVentasController controller = new InventarioVentasController();
-    private DefaultTableModel modelo;
-    private javax.swing.JButton btnRefrescar;
+public class InventarioVentasVista extends InventarioListadoController.InventarioLecturaVista {
 
     public InventarioVentasVista() {
         initComponents();
-        aplicarEstilos();
-        inicializarLogica();
-    }
-
-    private void aplicarEstilos() {
-        btnRefrescar = UiStyle.crearBotonRefrescar();
-        UiStyle.estilizarTabla(tablaInventario);
-        UiStyle.estilizarBotonNav(btnVolver);
-        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
-        UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla, btnRefrescar, btnVolver);
-    }
-
-    private void inicializarLogica() {
-        modelo = new DefaultTableModel(
-                new String[]{"No", "Producto", "Stock", "Minimo", "Prox. vencimiento", "Por vencer", "Vencido"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tablaInventario.setModel(modelo);
-        cargarDatos();
-        btnRefrescar.addActionListener(e -> cargarDatos());
-        btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
-    }
-
-    private void cargarDatos() {
-        modelo.setRowCount(0);
-        int no = 1;
-        for (InventarioEntity inv : controller.listarInventario()) {
-            String nombre = inv.getNombreProducto() != null
-                    ? inv.getNombreProducto() : controller.obtenerNombreProducto(inv.getIdProducto());
-            String proximoVencimiento = inv.getProximoVencimiento() != null
-                    ? inv.getProximoVencimiento().format(FECHA_FORMATO) : "-";
-            modelo.addRow(new Object[]{
-                no++,
-                nombre,
-                inv.getStock(),
-                inv.getStockMinimo(),
-                proximoVencimiento,
-                inv.getCantidadPorVencer(),
-                inv.getCantidadVencida()
-            });
-        }
+        aplicarEstilosLectura();
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitulo = new javax.swing.JLabel();
-        btnVolver = new javax.swing.JButton();
+        etiquetaTitulo = new javax.swing.JLabel();
+        botonVolver = new javax.swing.JButton();
         scrollTabla = new javax.swing.JScrollPane();
         tablaInventario = new javax.swing.JTable();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setText("Inventario");
+        etiquetaTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
+        etiquetaTitulo.setText("Inventario");
 
-        btnVolver.setText("Volver");
+        botonVolver.setText("Volver");
 
         tablaInventario.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{},
@@ -93,8 +35,8 @@ public class InventarioVentasVista extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addComponent(btnVolver)
+                    .addComponent(etiquetaTitulo)
+                    .addComponent(botonVolver)
                     .addComponent(scrollTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
         );
@@ -102,19 +44,12 @@ public class InventarioVentasVista extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
+                .addComponent(etiquetaTitulo)
                 .addGap(18, 18, 18)
-                .addComponent(btnVolver)
+                .addComponent(botonVolver)
                 .addGap(18, 18, 18)
                 .addComponent(scrollTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
         );
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnVolver;
-    private javax.swing.JLabel lblTitulo;
-    private javax.swing.JScrollPane scrollTabla;
-    private javax.swing.JTable tablaInventario;
-    // End of variables declaration//GEN-END:variables
+    }
 }

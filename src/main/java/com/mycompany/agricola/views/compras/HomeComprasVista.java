@@ -8,29 +8,31 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import com.mycompany.agricola.controllers.compras.HomeComprasController;
 import com.mycompany.agricola.views.util.UiIcons;
 import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiTheme;
 
 public class HomeComprasVista extends javax.swing.JPanel {
 
-    private final HomeComprasController controller = new HomeComprasController();
+    public javax.swing.JButton botonAlertar;
+    public javax.swing.JButton botonCompras;
+    public javax.swing.JButton botonInventario;
+    public javax.swing.JButton botonNuevaCompra;
+    public javax.swing.JLabel etiquetaTitulo;
 
     public HomeComprasVista() {
         initComponents();
         aplicarEstilos();
-        inicializarLogica();
     }
 
     private void aplicarEstilos() {
         UiStyle.aplicarPagina(this);
-        UiStyle.estilizarTitulo(lblTitulo);
-        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        estilizarTile(btnCompras, UiIcons.PURCHASE);
-        estilizarTile(btnNuevaCompra, UiIcons.ADD);
-        estilizarTile(btnInventario, UiIcons.INVENTORY);
-        estilizarTile(btnAlertar, UiIcons.ALERT);
+        UiStyle.estilizarTitulo(etiquetaTitulo);
+        etiquetaTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        estilizarTile(botonCompras, UiIcons.PURCHASE);
+        estilizarTile(botonNuevaCompra, UiIcons.ADD);
+        estilizarTile(botonInventario, UiIcons.INVENTORY);
+        estilizarTile(botonAlertar, UiIcons.ALERT);
         reorganizarLayout();
     }
 
@@ -57,9 +59,9 @@ public class HomeComprasVista extends javax.swing.JPanel {
         filaSuperior.setAlignmentX(CENTER_ALIGNMENT);
         filaSuperior.setMaximumSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
         filaSuperior.setPreferredSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
-        filaSuperior.add(btnCompras);
-        filaSuperior.add(btnNuevaCompra);
-        filaSuperior.add(btnInventario);
+        filaSuperior.add(botonCompras);
+        filaSuperior.add(botonNuevaCompra);
+        filaSuperior.add(botonInventario);
 
         JPanel filaInferior = new JPanel(new GridLayout(1, 3, UiTheme.SPACE_MD, 0));
         filaInferior.setOpaque(false);
@@ -67,7 +69,7 @@ public class HomeComprasVista extends javax.swing.JPanel {
         filaInferior.setMaximumSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
         filaInferior.setPreferredSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
         filaInferior.add(celdaVacia());
-        filaInferior.add(btnAlertar);
+        filaInferior.add(botonAlertar);
         filaInferior.add(celdaVacia());
 
         cuadricula.add(filaSuperior);
@@ -78,7 +80,7 @@ public class HomeComprasVista extends javax.swing.JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        centro.add(lblTitulo, gbc);
+        centro.add(etiquetaTitulo, gbc);
 
         gbc.gridy = 1;
         gbc.insets = new java.awt.Insets(UiTheme.SPACE_XXL, 0, 0, 0);
@@ -95,37 +97,21 @@ public class HomeComprasVista extends javax.swing.JPanel {
         return celda;
     }
 
-    private void inicializarLogica() {
-        btnCompras.addActionListener(e -> controller.abrirCompras(this));
-        btnNuevaCompra.addActionListener(e -> controller.abrirNuevaCompra(this));
-        btnInventario.addActionListener(e -> controller.abrirInventario(this));
-        btnAlertar.addActionListener(e -> controller.abrirAlertas(this));
-    }
-
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitulo = new javax.swing.JLabel();
-        btnCompras = new javax.swing.JButton();
-        btnNuevaCompra = new javax.swing.JButton();
-        btnInventario = new javax.swing.JButton();
-        btnAlertar = new javax.swing.JButton();
+        etiquetaTitulo = new javax.swing.JLabel();
+        botonCompras = new javax.swing.JButton();
+        botonNuevaCompra = new javax.swing.JButton();
+        botonInventario = new javax.swing.JButton();
+        botonAlertar = new javax.swing.JButton();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setText("Menu Compras");
+        etiquetaTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
+        etiquetaTitulo.setText("Menu Compras");
 
-        btnCompras.setText("Compras");
-        btnNuevaCompra.setText("Nueva Compra");
-        btnInventario.setText("Inventario");
-        btnAlertar.setText("Alertar");
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAlertar;
-    private javax.swing.JButton btnCompras;
-    private javax.swing.JButton btnInventario;
-    private javax.swing.JButton btnNuevaCompra;
-    private javax.swing.JLabel lblTitulo;
-    // End of variables declaration//GEN-END:variables
+        botonCompras.setText("Compras");
+        botonNuevaCompra.setText("Nueva Compra");
+        botonInventario.setText("Inventario");
+        botonAlertar.setText("Alertar");
+    }
 }

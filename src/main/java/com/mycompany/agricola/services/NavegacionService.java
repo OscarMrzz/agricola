@@ -5,23 +5,27 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.mycompany.agricola.views.admin.HomeAdminVista;
-import com.mycompany.agricola.views.compras.HomeComprasVista;
+import com.mycompany.agricola.controllers.admin.HomeAdminController;
+import com.mycompany.agricola.controllers.compras.HomeComprasController;
+import com.mycompany.agricola.controllers.ventas.HomeVentasController;
 import com.mycompany.agricola.views.util.UiUtil;
-import com.mycompany.agricola.views.ventas.HomeVentasVista;
 
 public class NavegacionService {
+
+    private final HomeAdminController homeAdminController = new HomeAdminController();
+    private final HomeVentasController homeVentasController = new HomeVentasController();
+    private final HomeComprasController homeComprasController = new HomeComprasController();
 
     public JPanel determinarHomeInicial() {
         String rol = AuthService.getRolNombre();
         if (rol == null) {
-            return new HomeVentasVista();
+            return homeVentasController.crearVista();
         }
         return switch (rol) {
-            case "Administrador" -> new HomeAdminVista();
-            case "Vendedor" -> new HomeVentasVista();
-            case "Compras" -> new HomeComprasVista();
-            default -> new HomeVentasVista();
+            case "Administrador" -> homeAdminController.crearVista();
+            case "Vendedor" -> homeVentasController.crearVista();
+            case "Compras" -> homeComprasController.crearVista();
+            default -> homeVentasController.crearVista();
         };
     }
 
@@ -44,6 +48,8 @@ public class NavegacionService {
     public void abrirFrame(JPanel panel, String titulo) {
         if (titulo != null && (titulo.contains("Agregar") || titulo.contains("Nueva"))) {
             UiUtil.abrirFrame(panel, titulo, 1120, 680);
+        } else if (titulo != null && titulo.contains("Editar")) {
+            UiUtil.abrirFrameFormulario(panel, titulo);
         } else {
             UiUtil.abrirFrame(panel, titulo);
         }

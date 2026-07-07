@@ -1,83 +1,59 @@
 package com.mycompany.agricola.views.admin.clientes;
 
-import java.math.BigDecimal;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import com.mycompany.agricola.controllers.admin.clientes.FormularioAgregarClienteController;
-import com.mycompany.agricola.model.entity.ClienteEntity;
 import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioAgregarClienteVista extends javax.swing.JPanel {
 
-    private final FormularioAgregarClienteController controller = new FormularioAgregarClienteController();
+    public javax.swing.JButton botonCancelar;
+    public javax.swing.JButton botonGuardar;
+    public javax.swing.JCheckBox checkboxActivo;
+    public javax.swing.JLabel etiquetaApellido;
+    public javax.swing.JLabel etiquetaEstado;
+    public javax.swing.JLabel etiquetaLimiteCredito;
+    public javax.swing.JLabel etiquetaNombre;
+    public javax.swing.JLabel etiquetaTitulo;
+    public javax.swing.JTextField inputApellido;
+    public javax.swing.JTextField inputLimiteCredito;
+    public javax.swing.JTextField inputNombre;
 
     public FormularioAgregarClienteVista() {
         initComponents();
         aplicarEstilos();
-        inicializarLogica();
     }
 
     private void aplicarEstilos() {
-        UiStyle.aplicarVistaFormulario(this, lblTitulo, btnGuardar, btnCancelar,
-                lblNombre, txtNombre, lblApellido, txtApellido,
-                lblLimiteCredito, txtLimiteCredito, lblEstado);
-    }
-
-    private void inicializarLogica() {
-        txtLimiteCredito.setText("0");
-        btnGuardar.addActionListener(e -> guardar());
-        btnCancelar.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
-    }
-
-    private void guardar() {
-        try {
-            ClienteEntity cliente = new ClienteEntity();
-            cliente.setNombreCliente(txtNombre.getText().trim());
-            cliente.setApellidoCliente(txtApellido.getText().trim());
-            cliente.setLimiteCredito(new BigDecimal(txtLimiteCredito.getText().trim()));
-            cliente.setEstado(chkActivo.isSelected());
-
-            var resultado = controller.crear(cliente);
-            if (resultado.isExito()) {
-                JOptionPane.showMessageDialog(this, "Cliente creado correctamente");
-                SwingUtilities.getWindowAncestor(this).dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, resultado.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Limite de credito invalido");
-        }
+        inputLimiteCredito.setText("0");
+        UiStyle.aplicarVistaFormulario(this, etiquetaTitulo, botonGuardar, botonCancelar,
+                etiquetaNombre, inputNombre, etiquetaApellido, inputApellido,
+                etiquetaLimiteCredito, inputLimiteCredito, etiquetaEstado);
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTitulo = new javax.swing.JLabel();
-        lblNombre = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
-        lblApellido = new javax.swing.JLabel();
-        txtApellido = new javax.swing.JTextField();
-        lblLimiteCredito = new javax.swing.JLabel();
-        txtLimiteCredito = new javax.swing.JTextField();
-        lblEstado = new javax.swing.JLabel();
-        chkActivo = new javax.swing.JCheckBox();
-        btnGuardar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        etiquetaTitulo = new javax.swing.JLabel();
+        etiquetaNombre = new javax.swing.JLabel();
+        inputNombre = new javax.swing.JTextField();
+        etiquetaApellido = new javax.swing.JLabel();
+        inputApellido = new javax.swing.JTextField();
+        etiquetaLimiteCredito = new javax.swing.JLabel();
+        inputLimiteCredito = new javax.swing.JTextField();
+        etiquetaEstado = new javax.swing.JLabel();
+        checkboxActivo = new javax.swing.JCheckBox();
+        botonGuardar = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setText("Agregar cliente");
+        etiquetaTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
+        etiquetaTitulo.setText("Agregar cliente");
 
-        lblNombre.setText("Nombre:");
-        lblApellido.setText("Apellido:");
-        lblLimiteCredito.setText("Limite credito:");
-        lblEstado.setText("Estado:");
-        chkActivo.setText("Activo");
-        chkActivo.setSelected(true);
-        btnGuardar.setText("Guardar");
-        btnCancelar.setText("Cancelar");
+        etiquetaNombre.setText("Nombre:");
+        etiquetaApellido.setText("Apellido:");
+        etiquetaLimiteCredito.setText("Limite credito:");
+        etiquetaEstado.setText("Estado:");
+        checkboxActivo.setText("Activo");
+        checkboxActivo.setSelected(true);
+        botonGuardar.setText("Guardar");
+        botonCancelar.setText("Cancelar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -86,69 +62,55 @@ public class FormularioAgregarClienteVista extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
+                    .addComponent(etiquetaTitulo)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addComponent(inputNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                        .addComponent(inputApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblLimiteCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaLimiteCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtLimiteCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inputLimiteCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(etiquetaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(chkActivo))
+                        .addComponent(checkboxActivo))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnGuardar)
+                        .addComponent(botonGuardar)
                         .addGap(8, 8, 8)
-                        .addComponent(btnCancelar)))
+                        .addComponent(botonCancelar)))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
+                .addComponent(etiquetaTitulo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNombre)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaNombre)
+                    .addComponent(inputNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblApellido)
-                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaApellido)
+                    .addComponent(inputApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblLimiteCredito)
-                    .addComponent(txtLimiteCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(etiquetaLimiteCredito)
+                    .addComponent(inputLimiteCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEstado)
-                    .addComponent(chkActivo))
+                    .addComponent(etiquetaEstado)
+                    .addComponent(checkboxActivo))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(botonGuardar)
+                    .addComponent(botonCancelar))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
-    }// </editor-fold>//GEN-END:initComponents
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JCheckBox chkActivo;
-    private javax.swing.JLabel lblApellido;
-    private javax.swing.JLabel lblEstado;
-    private javax.swing.JLabel lblLimiteCredito;
-    private javax.swing.JLabel lblNombre;
-    private javax.swing.JLabel lblTitulo;
-    private javax.swing.JTextField txtApellido;
-    private javax.swing.JTextField txtLimiteCredito;
-    private javax.swing.JTextField txtNombre;
-    // End of variables declaration//GEN-END:variables
+    }
 }

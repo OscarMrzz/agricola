@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -14,25 +11,47 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
-import com.mycompany.agricola.controllers.compras.ComprasController;
-import com.mycompany.agricola.model.entity.ComprasDetalleEntity;
-import com.mycompany.agricola.model.entity.FacturaCompraEntity;
 import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiTheme;
 
 public class VerFacturaCompraDialog extends JDialog {
 
-    private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    public JLabel etiquetaFechaValor;
+    public JLabel etiquetaIsv;
+    public JLabel etiquetaMetodoValor;
+    public JLabel etiquetaSubtotal;
+    public JLabel etiquetaTotal;
+    public JTable tablaDetalle;
+    public JButton botonCerrar;
 
-    public VerFacturaCompraDialog(Frame owner, FacturaCompraEntity factura, ComprasController controller) {
-        super(owner, "Factura " + factura.getNoFactura(), true);
-        construirUi(factura, controller.listarDetalleFactura(factura.getNoFactura()));
+    public VerFacturaCompraDialog(Frame owner, String noFactura) {
+        super(owner, "Factura " + noFactura, true);
+        initComponents();
+        aplicarEstilos();
     }
 
-    private void construirUi(FacturaCompraEntity factura, List<ComprasDetalleEntity> lineas) {
+    private void aplicarEstilos() {
+        UiStyle.estilizarCuerpo(etiquetaMetodoTitulo);
+        UiStyle.estilizarCuerpo(etiquetaFechaTitulo);
+        UiStyle.estilizarCuerpo(etiquetaMetodoValor);
+        UiStyle.estilizarCuerpo(etiquetaFechaValor);
+        UiStyle.estilizarTabla(tablaDetalle);
+        UiStyle.estilizarScrollTabla(scrollDetalle);
+        UiStyle.estilizarCuerpo(etiquetaSubtotalEtiqueta);
+        UiStyle.estilizarCuerpo(etiquetaIsvEtiqueta);
+        UiStyle.estilizarTotal(etiquetaTotalEtiqueta);
+        UiStyle.estilizarCuerpo(etiquetaSubtotal);
+        UiStyle.estilizarCuerpo(etiquetaIsv);
+        UiStyle.estilizarTotal(etiquetaTotal);
+        UiStyle.estilizarBoton(botonCerrar, UiStyle.TipoBoton.SECUNDARIO);
+        setSize(720, 520);
+        setLocationRelativeTo(getOwner());
+    }
+
+    private void initComponents() {
         setLayout(new BorderLayout(0, UiTheme.SPACE_LG));
+
         JPanel contenido = new JPanel(new BorderLayout(0, UiTheme.SPACE_LG));
         contenido.setBorder(javax.swing.BorderFactory.createEmptyBorder(
                 UiTheme.DIALOG_INSET, UiTheme.DIALOG_INSET, UiTheme.DIALOG_INSET, UiTheme.DIALOG_INSET));
@@ -40,89 +59,51 @@ public class VerFacturaCompraDialog extends JDialog {
         JPanel encabezado = new JPanel(new GridLayout(2, 2, UiTheme.SPACE_MD, UiTheme.SPACE_SM));
         encabezado.setOpaque(false);
 
-        JLabel lblMetodoTitulo = new JLabel("Metodo de pago:");
-        JLabel lblFechaTitulo = new JLabel("Fecha:");
-        JLabel lblMetodoValor = new JLabel(factura.getMetodoPago() != null ? factura.getMetodoPago() : "-");
-        String fechaTexto = factura.getFechaCompra() != null
-                ? factura.getFechaCompra().format(FECHA_FORMATO) : "-";
-        JLabel lblFechaValor = new JLabel(fechaTexto);
+        etiquetaMetodoTitulo = new JLabel("Metodo de pago:");
+        etiquetaFechaTitulo = new JLabel("Fecha:");
+        etiquetaMetodoValor = new JLabel("-");
+        etiquetaFechaValor = new JLabel("-");
 
-        UiStyle.estilizarCuerpo(lblMetodoTitulo);
-        UiStyle.estilizarCuerpo(lblFechaTitulo);
-        UiStyle.estilizarCuerpo(lblMetodoValor);
-        UiStyle.estilizarCuerpo(lblFechaValor);
-
-        encabezado.add(lblMetodoTitulo);
-        encabezado.add(lblMetodoValor);
-        encabezado.add(lblFechaTitulo);
-        encabezado.add(lblFechaValor);
+        encabezado.add(etiquetaMetodoTitulo);
+        encabezado.add(etiquetaMetodoValor);
+        encabezado.add(etiquetaFechaTitulo);
+        encabezado.add(etiquetaFechaValor);
         contenido.add(encabezado, BorderLayout.NORTH);
 
-        DefaultTableModel modelo = new DefaultTableModel(
-                new String[]{"No", "Producto", "Cant.", "Precio", "Subtotal", "ISV", "Total"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        int no = 1;
-        for (ComprasDetalleEntity linea : lineas) {
-            modelo.addRow(new Object[]{
-                no++,
-                linea.getNombreProducto(),
-                linea.getCantidadProducto(),
-                linea.getPrecioUnitario(),
-                linea.getTotalAntesImpuesto(),
-                linea.getImpuesto(),
-                linea.getTotalAPagar()
-            });
-        }
-
-        JTable tabla = new JTable(modelo);
-        UiStyle.estilizarTabla(tabla);
-        JScrollPane scroll = new JScrollPane(tabla);
-        UiStyle.estilizarScrollTabla(scroll);
-        contenido.add(scroll, BorderLayout.CENTER);
+        tablaDetalle = new JTable();
+        scrollDetalle = new JScrollPane(tablaDetalle);
+        contenido.add(scrollDetalle, BorderLayout.CENTER);
 
         JPanel totales = new JPanel(new GridLayout(3, 2, UiTheme.SPACE_MD, UiTheme.SPACE_SM));
         totales.setOpaque(false);
-        JLabel lblSubtotalEtiqueta = new JLabel("Subtotal:");
-        JLabel lblIsvEtiqueta = new JLabel("ISV:");
-        JLabel lblTotalEtiqueta = new JLabel("Total a pagar:");
-        JLabel lblSubtotal = new JLabel(formatearMonto(factura.getSubtotal()));
-        JLabel lblIsv = new JLabel(formatearMonto(factura.getImpuesto()));
-        JLabel lblTotal = new JLabel(formatearMonto(factura.getTotal()));
+        etiquetaSubtotalEtiqueta = new JLabel("Subtotal:");
+        etiquetaIsvEtiqueta = new JLabel("ISV:");
+        etiquetaTotalEtiqueta = new JLabel("Total a pagar:");
+        etiquetaSubtotal = new JLabel("0.00");
+        etiquetaIsv = new JLabel("0.00");
+        etiquetaTotal = new JLabel("0.00");
 
-        UiStyle.estilizarCuerpo(lblSubtotalEtiqueta);
-        UiStyle.estilizarCuerpo(lblIsvEtiqueta);
-        UiStyle.estilizarTotal(lblTotalEtiqueta);
-        UiStyle.estilizarCuerpo(lblSubtotal);
-        UiStyle.estilizarCuerpo(lblIsv);
-        UiStyle.estilizarTotal(lblTotal);
-
-        totales.add(lblSubtotalEtiqueta);
-        totales.add(lblSubtotal);
-        totales.add(lblIsvEtiqueta);
-        totales.add(lblIsv);
-        totales.add(lblTotalEtiqueta);
-        totales.add(lblTotal);
+        totales.add(etiquetaSubtotalEtiqueta);
+        totales.add(etiquetaSubtotal);
+        totales.add(etiquetaIsvEtiqueta);
+        totales.add(etiquetaIsv);
+        totales.add(etiquetaTotalEtiqueta);
+        totales.add(etiquetaTotal);
         contenido.add(totales, BorderLayout.SOUTH);
 
         add(contenido, BorderLayout.CENTER);
 
         JPanel pie = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pie.setOpaque(false);
-        JButton btnCerrar = new JButton("Cerrar");
-        UiStyle.estilizarBoton(btnCerrar, UiStyle.TipoBoton.SECUNDARIO);
-        btnCerrar.addActionListener(e -> dispose());
-        pie.add(btnCerrar);
+        botonCerrar = new JButton("Cerrar");
+        pie.add(botonCerrar);
         add(pie, BorderLayout.SOUTH);
-
-        setSize(720, 520);
-        setLocationRelativeTo(getOwner());
     }
 
-    private String formatearMonto(BigDecimal monto) {
-        return monto != null ? monto.toPlainString() : "0.00";
-    }
+    private JLabel etiquetaMetodoTitulo;
+    private JLabel etiquetaFechaTitulo;
+    private JLabel etiquetaSubtotalEtiqueta;
+    private JLabel etiquetaIsvEtiqueta;
+    private JLabel etiquetaTotalEtiqueta;
+    private JScrollPane scrollDetalle;
 }

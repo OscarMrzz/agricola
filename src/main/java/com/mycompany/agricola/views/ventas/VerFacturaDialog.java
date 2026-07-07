@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -16,22 +14,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.mycompany.agricola.controllers.ventas.VentasController;
-import com.mycompany.agricola.model.entity.FacturaVentaEntity;
-import com.mycompany.agricola.model.entity.VentasDetalleEntity;
 import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiTheme;
 
 public class VerFacturaDialog extends JDialog {
 
-    private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-    public VerFacturaDialog(Frame owner, FacturaVentaEntity factura, VentasController controller) {
-        super(owner, "Factura " + factura.getNoFactura(), true);
-        construirUi(factura, controller.listarDetalleFactura(factura.getNoFactura()));
+    public VerFacturaDialog(Frame owner, String noFactura, String cliente, String fecha,
+            List<Object[]> filasDetalle, String subtotal, String isv, String total) {
+        super(owner, "Factura " + noFactura, true);
+        construirUi(cliente, fecha, filasDetalle, subtotal, isv, total);
     }
 
-    private void construirUi(FacturaVentaEntity factura, List<VentasDetalleEntity> lineas) {
+    private void construirUi(String cliente, String fecha, List<Object[]> filasDetalle,
+            String subtotal, String isv, String total) {
         setLayout(new BorderLayout(0, UiTheme.SPACE_LG));
         JPanel contenido = new JPanel(new BorderLayout(0, UiTheme.SPACE_LG));
         contenido.setBorder(javax.swing.BorderFactory.createEmptyBorder(
@@ -40,22 +35,20 @@ public class VerFacturaDialog extends JDialog {
         JPanel encabezado = new JPanel(new GridLayout(2, 2, UiTheme.SPACE_MD, UiTheme.SPACE_SM));
         encabezado.setOpaque(false);
 
-        JLabel lblClienteTitulo = new JLabel("Cliente:");
-        JLabel lblFechaTitulo = new JLabel("Fecha:");
-        JLabel lblClienteValor = new JLabel(factura.getCliente() != null ? factura.getCliente() : "-");
-        String fechaTexto = factura.getFechaVenta() != null
-                ? factura.getFechaVenta().format(FECHA_FORMATO) : "-";
-        JLabel lblFechaValor = new JLabel(fechaTexto);
+        JLabel etiquetaClienteTitulo = new JLabel("Cliente:");
+        JLabel etiquetaFechaTitulo = new JLabel("Fecha:");
+        JLabel etiquetaClienteValor = new JLabel(cliente);
+        JLabel etiquetaFechaValor = new JLabel(fecha);
 
-        UiStyle.estilizarCuerpo(lblClienteTitulo);
-        UiStyle.estilizarCuerpo(lblFechaTitulo);
-        UiStyle.estilizarCuerpo(lblClienteValor);
-        UiStyle.estilizarCuerpo(lblFechaValor);
+        UiStyle.estilizarCuerpo(etiquetaClienteTitulo);
+        UiStyle.estilizarCuerpo(etiquetaFechaTitulo);
+        UiStyle.estilizarCuerpo(etiquetaClienteValor);
+        UiStyle.estilizarCuerpo(etiquetaFechaValor);
 
-        encabezado.add(lblClienteTitulo);
-        encabezado.add(lblClienteValor);
-        encabezado.add(lblFechaTitulo);
-        encabezado.add(lblFechaValor);
+        encabezado.add(etiquetaClienteTitulo);
+        encabezado.add(etiquetaClienteValor);
+        encabezado.add(etiquetaFechaTitulo);
+        encabezado.add(etiquetaFechaValor);
         contenido.add(encabezado, BorderLayout.NORTH);
 
         DefaultTableModel modelo = new DefaultTableModel(
@@ -65,17 +58,8 @@ public class VerFacturaDialog extends JDialog {
                 return false;
             }
         };
-        int no = 1;
-        for (VentasDetalleEntity linea : lineas) {
-            modelo.addRow(new Object[]{
-                no++,
-                linea.getNombreProducto(),
-                linea.getCantidadProducto(),
-                linea.getPrecioUnitario(),
-                linea.getSubtotal(),
-                linea.getImpuesto(),
-                linea.getTotalAPagar()
-            });
+        for (Object[] fila : filasDetalle) {
+            modelo.addRow(fila);
         }
 
         JTable tabla = new JTable(modelo);
@@ -86,43 +70,39 @@ public class VerFacturaDialog extends JDialog {
 
         JPanel totales = new JPanel(new GridLayout(3, 2, UiTheme.SPACE_MD, UiTheme.SPACE_SM));
         totales.setOpaque(false);
-        JLabel lblSubtotalEtiqueta = new JLabel("Subtotal:");
-        JLabel lblIsvEtiqueta = new JLabel("ISV:");
-        JLabel lblTotalEtiqueta = new JLabel("Total a pagar:");
-        JLabel lblSubtotal = new JLabel(formatearMonto(factura.getSubtotal()));
-        JLabel lblIsv = new JLabel(formatearMonto(factura.getImpuesto()));
-        JLabel lblTotal = new JLabel(formatearMonto(factura.getTotal()));
+        JLabel etiquetaSubtotal = new JLabel("Subtotal:");
+        JLabel etiquetaIsv = new JLabel("ISV:");
+        JLabel etiquetaTotal = new JLabel("Total a pagar:");
+        JLabel etiquetaSubtotalValor = new JLabel(subtotal);
+        JLabel etiquetaIsvValor = new JLabel(isv);
+        JLabel etiquetaTotalValor = new JLabel(total);
 
-        UiStyle.estilizarCuerpo(lblSubtotalEtiqueta);
-        UiStyle.estilizarCuerpo(lblIsvEtiqueta);
-        UiStyle.estilizarTotal(lblTotalEtiqueta);
-        UiStyle.estilizarCuerpo(lblSubtotal);
-        UiStyle.estilizarCuerpo(lblIsv);
-        UiStyle.estilizarTotal(lblTotal);
+        UiStyle.estilizarCuerpo(etiquetaSubtotal);
+        UiStyle.estilizarCuerpo(etiquetaIsv);
+        UiStyle.estilizarTotal(etiquetaTotal);
+        UiStyle.estilizarCuerpo(etiquetaSubtotalValor);
+        UiStyle.estilizarCuerpo(etiquetaIsvValor);
+        UiStyle.estilizarTotal(etiquetaTotalValor);
 
-        totales.add(lblSubtotalEtiqueta);
-        totales.add(lblSubtotal);
-        totales.add(lblIsvEtiqueta);
-        totales.add(lblIsv);
-        totales.add(lblTotalEtiqueta);
-        totales.add(lblTotal);
+        totales.add(etiquetaSubtotal);
+        totales.add(etiquetaSubtotalValor);
+        totales.add(etiquetaIsv);
+        totales.add(etiquetaIsvValor);
+        totales.add(etiquetaTotal);
+        totales.add(etiquetaTotalValor);
         contenido.add(totales, BorderLayout.SOUTH);
 
         add(contenido, BorderLayout.CENTER);
 
         JPanel pie = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pie.setOpaque(false);
-        JButton btnCerrar = new JButton("Cerrar");
-        UiStyle.estilizarBoton(btnCerrar, UiStyle.TipoBoton.SECUNDARIO);
-        btnCerrar.addActionListener(e -> dispose());
-        pie.add(btnCerrar);
+        JButton botonCerrar = new JButton("Cerrar");
+        UiStyle.estilizarBoton(botonCerrar, UiStyle.TipoBoton.SECUNDARIO);
+        botonCerrar.addActionListener(e -> dispose());
+        pie.add(botonCerrar);
         add(pie, BorderLayout.SOUTH);
 
         setSize(720, 520);
         setLocationRelativeTo(getOwner());
-    }
-
-    private String formatearMonto(BigDecimal monto) {
-        return monto != null ? monto.toPlainString() : "0.00";
     }
 }
