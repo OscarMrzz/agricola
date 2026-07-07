@@ -45,9 +45,6 @@
                 <version>3.5.0</version>
                 <configuration>
                     <mainClass>${exec.mainClass}</mainClass>
-                    <arguments>
-                        <argument>--enable-native-access=ALL-UNNAMED</argument>
-                    </arguments>
                 </configuration>
             </plugin>
         </plugins>
