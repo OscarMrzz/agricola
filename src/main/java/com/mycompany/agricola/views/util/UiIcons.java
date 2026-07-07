@@ -36,4 +36,8 @@ public final class UiIcons {
     public static FlatSVGIcon iconoGrande(String path) {
         return new FlatSVGIcon(path, UiTheme.ICON_SIZE_LG, UiTheme.ICON_SIZE_LG);
     }
+
+    public static FlatSVGIcon iconoTile(String path) {
+        return new FlatSVGIcon(path, UiTheme.ICON_SIZE_TILE, UiTheme.ICON_SIZE_TILE);
+    }
 }

@@ -25,9 +25,11 @@ public final class UiTheme {
     public static final Dimension BTN_SM = new Dimension(90, 28);
     public static final Dimension BTN_MD = new Dimension(110, 32);
     public static final Dimension BTN_LG = new Dimension(130, 36);
+    public static final Dimension BTN_TILE = new Dimension(160, 140);
 
     public static final int ICON_SIZE = 16;
     public static final int ICON_SIZE_LG = 20;
+    public static final int ICON_SIZE_TILE = 32;
     public static final int TABLE_ROW_HEIGHT = 28;
 
     public static final int FONT_TITLE_SIZE = 18;

@@ -1,7 +1,9 @@
 package com.mycompany.agricola.views.admin;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+
 import javax.swing.JPanel;
 
 import com.mycompany.agricola.controllers.admin.HomeAdminController;
@@ -20,73 +22,67 @@ public class HomeAdminVista extends javax.swing.JPanel {
     }
 
     private void aplicarEstilos() {
-        UiStyle.aplicarVistaHome(this, lblTitulo,
-                new javax.swing.JLabel[]{lblSeccionVentas, lblSeccionCompras, lblSeccionAdmin},
-                btnListadoVentas, btnNuevaVenta, btnFactura,
-                btnListadoCompras, btnNuevaCompra,
-                btnUsuarios, btnClientes, btnProductos, btnInventario, btnAlertar);
-        UiStyle.conIcono(btnListadoVentas, UiIcons.SALE);
-        UiStyle.conIcono(btnNuevaVenta, UiIcons.ADD);
-        UiStyle.conIcono(btnFactura, UiIcons.PDF);
-        UiStyle.conIcono(btnListadoCompras, UiIcons.PURCHASE);
-        UiStyle.conIcono(btnNuevaCompra, UiIcons.ADD);
-        UiStyle.conIcono(btnUsuarios, UiIcons.USERS);
-        UiStyle.conIcono(btnClientes, UiIcons.CLIENT);
-        UiStyle.conIcono(btnProductos, UiIcons.PRODUCTS);
-        UiStyle.conIcono(btnInventario, UiIcons.INVENTORY);
-        UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        estilizarTile(btnVentas, UiIcons.SALE);
+        estilizarTile(btnCompras, UiIcons.PURCHASE);
+        estilizarTile(btnUsuarios, UiIcons.USERS);
+        estilizarTile(btnClientes, UiIcons.CLIENT);
+        estilizarTile(btnProductos, UiIcons.PRODUCTS);
+        estilizarTile(btnInventario, UiIcons.INVENTORY);
+        estilizarTile(btnAlertar, UiIcons.ALERT);
         reorganizarLayout();
+    }
+
+    private void estilizarTile(javax.swing.JButton boton, String icono) {
+        UiStyle.estilizarBotonTile(boton);
+        UiStyle.conIconoTile(boton, icono);
     }
 
     private void reorganizarLayout() {
         removeAll();
         setLayout(new java.awt.BorderLayout());
-        UiStyle.aplicarPagina(this);
 
-        JPanel contenido = new JPanel();
-        contenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
-        contenido.setOpaque(false);
+        JPanel centro = new JPanel(new GridBagLayout());
+        centro.setOpaque(false);
 
-        contenido.add(lblTitulo);
-        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_LG));
+        JPanel cuadricula = new JPanel(new GridLayout(3, 3, UiTheme.SPACE_MD, UiTheme.SPACE_MD));
+        cuadricula.setOpaque(false);
+        cuadricula.add(btnVentas);
+        cuadricula.add(btnCompras);
+        cuadricula.add(btnUsuarios);
+        cuadricula.add(btnClientes);
+        cuadricula.add(btnProductos);
+        cuadricula.add(btnInventario);
+        cuadricula.add(celdaVacia());
+        cuadricula.add(btnAlertar);
+        cuadricula.add(celdaVacia());
 
-        contenido.add(lblSeccionVentas);
-        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_SM));
-        contenido.add(filaBotones(btnListadoVentas, btnNuevaVenta, btnFactura));
-        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_LG));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        centro.add(lblTitulo, gbc);
 
-        contenido.add(lblSeccionCompras);
-        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_SM));
-        contenido.add(filaBotones(btnListadoCompras, btnNuevaCompra));
-        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_LG));
+        gbc.gridy = 1;
+        gbc.insets = new java.awt.Insets(UiTheme.SPACE_XXL, 0, 0, 0);
+        centro.add(cuadricula, gbc);
 
-        contenido.add(lblSeccionAdmin);
-        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_SM));
-        contenido.add(filaBotones(btnUsuarios, btnClientes, btnProductos, btnInventario, btnAlertar));
-
-        add(contenido, java.awt.BorderLayout.NORTH);
+        add(centro, java.awt.BorderLayout.CENTER);
         revalidate();
         repaint();
     }
 
-    private JPanel filaBotones(javax.swing.JButton... botones) {
-        JPanel fila = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, UiTheme.SPACE_SM, 0));
-        fila.setOpaque(false);
-        fila.setAlignmentX(LEFT_ALIGNMENT);
-        for (javax.swing.JButton boton : botones) {
-            fila.add(boton);
-        }
-        return fila;
+    private JPanel celdaVacia() {
+        JPanel celda = new JPanel();
+        celda.setOpaque(false);
+        return celda;
     }
 
     private void inicializarLogica() {
-        btnListadoVentas.addActionListener(e -> controller.abrirListadoVentas(this));
-        btnNuevaVenta.addActionListener(e -> controller.abrirNuevaVenta(this));
-        btnFactura.addActionListener(e -> controller.abrirFactura(this));
-
-        btnListadoCompras.addActionListener(e -> controller.abrirListadoCompras(this));
-        btnNuevaCompra.addActionListener(e -> controller.abrirNuevaCompra(this));
-
+        btnVentas.addActionListener(e -> controller.abrirListadoVentas(this));
+        btnCompras.addActionListener(e -> controller.abrirListadoCompras(this));
         btnUsuarios.addActionListener(e -> controller.abrirUsuarios(this));
         btnClientes.addActionListener(e -> controller.abrirClientes(this));
         btnProductos.addActionListener(e -> controller.abrirProductos(this));
@@ -99,14 +95,8 @@ public class HomeAdminVista extends javax.swing.JPanel {
     private void initComponents() {
 
         lblTitulo = new javax.swing.JLabel();
-        lblSeccionVentas = new javax.swing.JLabel();
-        btnListadoVentas = new javax.swing.JButton();
-        btnNuevaVenta = new javax.swing.JButton();
-        btnFactura = new javax.swing.JButton();
-        lblSeccionCompras = new javax.swing.JLabel();
-        btnListadoCompras = new javax.swing.JButton();
-        btnNuevaCompra = new javax.swing.JButton();
-        lblSeccionAdmin = new javax.swing.JLabel();
+        btnVentas = new javax.swing.JButton();
+        btnCompras = new javax.swing.JButton();
         btnUsuarios = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
         btnProductos = new javax.swing.JButton();
@@ -116,22 +106,8 @@ public class HomeAdminVista extends javax.swing.JPanel {
         lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
         lblTitulo.setText("Panel de administracion");
 
-        lblSeccionVentas.setFont(new java.awt.Font("Arial", 1, 12));
-        lblSeccionVentas.setText("Ventas");
-
-        btnListadoVentas.setText("Listado Ventas");
-        btnNuevaVenta.setText("Nueva Venta");
-        btnFactura.setText("Factura");
-
-        lblSeccionCompras.setFont(new java.awt.Font("Arial", 1, 12));
-        lblSeccionCompras.setText("Compras");
-
-        btnListadoCompras.setText("Listado Compras");
-        btnNuevaCompra.setText("Nueva Compra");
-
-        lblSeccionAdmin.setFont(new java.awt.Font("Arial", 1, 12));
-        lblSeccionAdmin.setText("Administracion");
-
+        btnVentas.setText("Venta");
+        btnCompras.setText("Compras");
         btnUsuarios.setText("Usuarios");
         btnClientes.setText("Clientes");
         btnProductos.setText("Productos");
@@ -142,17 +118,11 @@ public class HomeAdminVista extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlertar;
     private javax.swing.JButton btnClientes;
-    private javax.swing.JButton btnFactura;
+    private javax.swing.JButton btnCompras;
     private javax.swing.JButton btnInventario;
-    private javax.swing.JButton btnListadoCompras;
-    private javax.swing.JButton btnListadoVentas;
-    private javax.swing.JButton btnNuevaCompra;
-    private javax.swing.JButton btnNuevaVenta;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnUsuarios;
-    private javax.swing.JLabel lblSeccionAdmin;
-    private javax.swing.JLabel lblSeccionCompras;
-    private javax.swing.JLabel lblSeccionVentas;
+    private javax.swing.JButton btnVentas;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

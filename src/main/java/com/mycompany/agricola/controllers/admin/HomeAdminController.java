@@ -21,20 +21,8 @@ public class HomeAdminController {
         ventasController.abrirVentas(parent);
     }
 
-    public void abrirNuevaVenta(Component parent) {
-        ventasController.abrirNuevaVenta(parent);
-    }
-
-    public void abrirFactura(Component parent) {
-        ventasController.abrirFactura(parent);
-    }
-
     public void abrirListadoCompras(Component parent) {
         comprasController.abrirCompras(parent);
-    }
-
-    public void abrirNuevaCompra(Component parent) {
-        comprasController.abrirNuevaCompra(parent);
     }
 
     public void abrirUsuarios(Component parent) {

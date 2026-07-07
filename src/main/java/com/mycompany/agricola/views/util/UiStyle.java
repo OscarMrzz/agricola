@@ -109,6 +109,19 @@ public final class UiStyle {
         boton.setPreferredSize(UiTheme.BTN_MD);
     }
 
+    public static void estilizarBotonTile(JButton boton) {
+        boton.setFont(UiTheme.fontBody());
+        boton.putClientProperty("JButton.buttonType", "square");
+        boton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        boton.setHorizontalTextPosition(SwingConstants.CENTER);
+        boton.setIconTextGap(UiTheme.SPACE_MD);
+        boton.setMargin(new Insets(UiTheme.SPACE_MD, UiTheme.SPACE_SM,
+                UiTheme.SPACE_MD, UiTheme.SPACE_SM));
+        boton.setPreferredSize(UiTheme.BTN_TILE);
+        boton.setMinimumSize(UiTheme.BTN_TILE);
+        boton.setMaximumSize(UiTheme.BTN_TILE);
+    }
+
     public static JButton crearBotonRefrescar() {
         JButton boton = new JButton("Refrescar");
         estilizarBotonNav(boton);
@@ -149,6 +162,13 @@ public final class UiStyle {
         boton.setIcon(UiIcons.icono(svgPath));
         boton.setHorizontalTextPosition(SwingConstants.RIGHT);
         boton.setIconTextGap(UiTheme.SPACE_SM);
+    }
+
+    public static void conIconoTile(JButton boton, String svgPath) {
+        boton.setIcon(UiIcons.iconoTile(svgPath));
+        boton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        boton.setHorizontalTextPosition(SwingConstants.CENTER);
+        boton.setIconTextGap(UiTheme.SPACE_MD);
     }
 
     public static void estilizarTabla(JTable tabla) {
