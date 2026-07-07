@@ -2,7 +2,7 @@ package com.mycompany.agricola.services;
 
 import java.math.BigDecimal;
 import java.util.List;
-import com.mycompany.agricola.model.dao.implement.ClienteDaoApl;
+import com.mycompany.agricola.dao.implement.ClienteDaoApl;
 import com.mycompany.agricola.model.entity.CreditosClientesDetalleEntity;
 
 public class CreditosClientesService {

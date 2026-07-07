@@ -9,8 +9,8 @@ import java.time.format.DateTimeParseException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.mycompany.agricola.model.dao.implement.ProductoDaoApl;
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.dao.implement.ProductoDaoApl;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.ProductoEntity;
 import com.mycompany.agricola.services.NavegacionService;
 import com.mycompany.agricola.views.admin.productos.FormularioAgregarProductoVista;

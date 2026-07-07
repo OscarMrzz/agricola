@@ -2,7 +2,7 @@ package com.mycompany.agricola.services;
 
 import java.util.List;
 
-import com.mycompany.agricola.model.dao.implement.AlertaVencidoDaoApl;
+import com.mycompany.agricola.dao.implement.AlertaVencidoDaoApl;
 import com.mycompany.agricola.model.entity.AdvertenciaVencidoEntity;
 
 public class AlertaProductoVencidoService {

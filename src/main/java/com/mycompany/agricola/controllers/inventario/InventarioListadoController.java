@@ -13,8 +13,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.util.TablaCrudHelper;
-import com.mycompany.agricola.model.dao.implement.InventarioDaoApl;
-import com.mycompany.agricola.model.dao.implement.ProductoDaoApl;
+import com.mycompany.agricola.dao.implement.InventarioDaoApl;
+import com.mycompany.agricola.dao.implement.ProductoDaoApl;
 import com.mycompany.agricola.model.entity.InventarioEntity;
 import com.mycompany.agricola.model.entity.ProductoEntity;
 import com.mycompany.agricola.services.NavegacionService;

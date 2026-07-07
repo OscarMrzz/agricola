@@ -5,9 +5,9 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.mycompany.agricola.model.dao.implement.InventarioConfigDaoApl;
-import com.mycompany.agricola.model.dao.implement.InventarioDaoApl;
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.dao.implement.InventarioConfigDaoApl;
+import com.mycompany.agricola.dao.implement.InventarioDaoApl;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.InventarioEntity;
 import com.mycompany.agricola.services.NavegacionService;
 import com.mycompany.agricola.views.admin.inventario.FormularioEditarInventarioVista;

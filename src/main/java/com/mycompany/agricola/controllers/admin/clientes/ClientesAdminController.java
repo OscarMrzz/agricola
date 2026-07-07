@@ -9,8 +9,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.util.TablaCrudHelper;
-import com.mycompany.agricola.model.dao.implement.ClienteDaoApl;
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.dao.implement.ClienteDaoApl;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.ClienteEntity;
 import com.mycompany.agricola.model.entity.CreditosClientesDetalleEntity;
 import com.mycompany.agricola.services.CreditosClientesService;

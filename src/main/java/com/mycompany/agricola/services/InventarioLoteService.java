@@ -2,10 +2,10 @@ package com.mycompany.agricola.services;
 
 import java.time.LocalDateTime;
 
-import com.mycompany.agricola.model.dao.implement.InventarioConfigDaoApl;
-import com.mycompany.agricola.model.dao.implement.InventarioDaoApl;
-import com.mycompany.agricola.model.dao.implement.InventarioLoteDaoApl;
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.dao.implement.InventarioConfigDaoApl;
+import com.mycompany.agricola.dao.implement.InventarioDaoApl;
+import com.mycompany.agricola.dao.implement.InventarioLoteDaoApl;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.InventarioEntity;
 
 public class InventarioLoteService {

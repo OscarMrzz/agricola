@@ -6,9 +6,9 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.mycompany.agricola.model.dao.implement.RolDaoApl;
-import com.mycompany.agricola.model.dao.implement.UsuarioDaoApl;
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.dao.implement.RolDaoApl;
+import com.mycompany.agricola.dao.implement.UsuarioDaoApl;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.RolEntity;
 import com.mycompany.agricola.model.entity.UsuarioEntity;
 import com.mycompany.agricola.services.NavegacionService;

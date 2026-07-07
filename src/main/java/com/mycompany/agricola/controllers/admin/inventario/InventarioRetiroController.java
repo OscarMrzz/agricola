@@ -4,7 +4,7 @@ import java.awt.Frame;
 
 import javax.swing.JOptionPane;
 
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.InventarioEntity;
 import com.mycompany.agricola.services.AuthService;
 import com.mycompany.agricola.services.InventarioLoteService;

@@ -11,8 +11,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.util.TablaCrudHelper;
-import com.mycompany.agricola.model.dao.implement.VentaDaoApl;
-import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.dao.implement.VentaDaoApl;
+import com.mycompany.agricola.util.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.FacturaVentaEntity;
 import com.mycompany.agricola.model.entity.VentaEntity;
 import com.mycompany.agricola.model.entity.VentasDetalleEntity;

@@ -1,7 +1,7 @@
 package com.mycompany.agricola.services;
 
 import java.util.List;
-import com.mycompany.agricola.model.dao.implement.InventarioDaoApl;
+import com.mycompany.agricola.dao.implement.InventarioDaoApl;
 import com.mycompany.agricola.model.entity.AdvertenciaStockBajoEntity;
 
 public class AlertaCantidadBajaService {

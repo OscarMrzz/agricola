@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.mycompany.agricola.model.dao.implement.PermisoVistaDaoApl;
-import com.mycompany.agricola.model.dao.implement.RolDaoApl;
-import com.mycompany.agricola.model.dao.implement.UsuarioDaoApl;
-import com.mycompany.agricola.model.dao.implement.VistaDaoApl;
+import com.mycompany.agricola.dao.implement.PermisoVistaDaoApl;
+import com.mycompany.agricola.dao.implement.RolDaoApl;
+import com.mycompany.agricola.dao.implement.UsuarioDaoApl;
+import com.mycompany.agricola.dao.implement.VistaDaoApl;
 import com.mycompany.agricola.model.entity.PermisoVistaEntity;
 import com.mycompany.agricola.model.entity.RolEntity;
 import com.mycompany.agricola.model.entity.UsuarioEntity;
