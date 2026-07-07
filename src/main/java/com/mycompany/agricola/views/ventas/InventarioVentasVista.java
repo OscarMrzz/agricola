@@ -24,7 +24,7 @@ public class InventarioVentasVista extends javax.swing.JPanel {
         btnRefrescar = UiStyle.crearBotonRefrescar();
         UiStyle.estilizarTabla(tablaInventario);
         UiStyle.estilizarBotonNav(btnVolver);
-        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla, btnRefrescar, btnVolver);
     }
 

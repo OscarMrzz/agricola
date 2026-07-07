@@ -42,7 +42,7 @@ public class InventarioAdminVista extends javax.swing.JPanel {
         UiStyle.estilizarBotonNav(btnVolver);
         UiStyle.conIcono(btnEditar, UiIcons.EDIT);
         UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
-        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         reorganizarLayout();
     }
 

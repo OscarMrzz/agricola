@@ -77,7 +77,7 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         UiStyle.conIcono(btnAgregarCarrito, UiIcons.CART);
         UiStyle.conIcono(btnGuardarVenta, UiIcons.SAVE);
         UiStyle.conIcono(btnGenerarPdf, UiIcons.PDF);
-        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         UiStyle.conIcono(btnEliminarFila, UiIcons.DELETE);
         reorganizarLayout();
     }

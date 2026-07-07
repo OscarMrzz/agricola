@@ -42,7 +42,7 @@ public class VentasVista extends javax.swing.JPanel {
         UiStyle.conIcono(btnAgregar, UiIcons.ADD);
         UiStyle.conIcono(btnVer, UiIcons.VIEW);
         UiStyle.conIcono(btnEliminar, UiIcons.DELETE);
-        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla,
                 btnAgregar, btnVer, btnEliminar, btnRefrescar, btnVolver);
     }

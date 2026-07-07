@@ -72,7 +72,7 @@ public class FormularioAgregarCompraVista extends javax.swing.JPanel {
         UiStyle.estilizarBoton(btnEliminarFila, UiStyle.TipoBoton.PELIGRO);
         UiStyle.conIcono(btnAgregarCarrito, UiIcons.CART);
         UiStyle.conIcono(btnGuardarCompra, UiIcons.SAVE);
-        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         UiStyle.conIcono(btnEliminarFila, UiIcons.DELETE);
         reorganizarLayout();
     }

@@ -36,7 +36,7 @@ public class ClientesAdminVista extends javax.swing.JPanel {
         UiStyle.conIcono(btnAgregar, UiIcons.ADD);
         UiStyle.conIcono(btnEditar, UiIcons.EDIT);
         UiStyle.conIcono(btnEliminar, UiIcons.DELETE);
-        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla,
                 btnAgregar, btnEditar, btnEliminar, btnRefrescar, btnVolver);
     }
