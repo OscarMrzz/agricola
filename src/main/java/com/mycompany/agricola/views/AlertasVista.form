@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="3"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblTitulo">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Arial Black" size="16" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Alertas"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblVencimiento">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Productos por vencer"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="scrollVencimiento">
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="tablaVencimiento"/>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JLabel" name="lblStock">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stock bajo"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="scrollStock">
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="tablaStock"/>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

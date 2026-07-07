@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="3"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="panelFormulario">
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblTituloFormulario">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="16" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Nueva venta"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblNoFactura">
+          <Properties><Property name="text" type="java.lang.String" value="No. factura:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblNoFacturaValor">
+          <Properties><Property name="text" type="java.lang.String" value="-"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblProducto">
+          <Properties><Property name="text" type="java.lang.String" value="Producto:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbProducto"/>
+        <Component class="javax.swing.JLabel" name="lblCliente">
+          <Properties><Property name="text" type="java.lang.String" value="Cliente:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbCliente"/>
+        <Component class="javax.swing.JLabel" name="lblCantidad">
+          <Properties><Property name="text" type="java.lang.String" value="Cantidad:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtCantidad"/>
+        <Component class="javax.swing.JLabel" name="lblPrecioUnitario">
+          <Properties><Property name="text" type="java.lang.String" value="Precio unitario:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPrecioUnitario"/>
+        <Component class="javax.swing.JLabel" name="lblMetodoPago">
+          <Properties><Property name="text" type="java.lang.String" value="Metodo pago:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbMetodoPago"/>
+        <Component class="javax.swing.JLabel" name="lblSubtotalEtiqueta">
+          <Properties><Property name="text" type="java.lang.String" value="Subtotal linea:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSubtotalLinea">
+          <Properties><Property name="text" type="java.lang.String" value="0.00"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblIsvEtiqueta">
+          <Properties><Property name="text" type="java.lang.String" value="ISV 15%:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblIsvLinea">
+          <Properties><Property name="text" type="java.lang.String" value="0.00"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTotalEtiqueta">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Total linea:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTotalLinea">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="0.00"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnAgregarCarrito">
+          <Properties><Property name="text" type="java.lang.String" value="Agregar al carrito"/></Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnGuardarVenta">
+          <Properties><Property name="text" type="java.lang.String" value="Guardar venta"/></Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnGenerarPdf">
+          <Properties><Property name="text" type="java.lang.String" value="Generar PDF"/></Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnVolver">
+          <Properties><Property name="text" type="java.lang.String" value="Volver"/></Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="panelCarrito">
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblTituloCarrito">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="16" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Carrito de productos"/>
+          </Properties>
+        </Component>
+        <Container class="javax.swing.JScrollPane" name="scrollCarrito">
+          <SubComponents>
+            <Component class="javax.swing.JTable" name="tablaCarrito"/>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JLabel" name="lblSubtotalFacturaEtiqueta">
+          <Properties><Property name="text" type="java.lang.String" value="Subtotal:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSubtotalFactura">
+          <Properties><Property name="text" type="java.lang.String" value="0.00"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblIsvFacturaEtiqueta">
+          <Properties><Property name="text" type="java.lang.String" value="ISV:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblIsvFactura">
+          <Properties><Property name="text" type="java.lang.String" value="0.00"/></Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTotalFacturaEtiqueta">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Total:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTotalFactura">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="0.00"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

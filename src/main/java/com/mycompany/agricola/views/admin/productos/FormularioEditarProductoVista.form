@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="3"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblNoEncontrado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Producto no encontrado"/>
+        <Property name="visible" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JPanel" name="panelFormulario">
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblTitulo">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Arial Black" size="16" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Editar producto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblNombre">
+          <Properties><Property name="text" type="java.lang.String" value="Nombre:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtNombre"/>
+        <Component class="javax.swing.JLabel" name="lblCategoria">
+          <Properties><Property name="text" type="java.lang.String" value="Categoria:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtCategoria"/>
+        <Component class="javax.swing.JLabel" name="lblDepartamento">
+          <Properties><Property name="text" type="java.lang.String" value="Departamento:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDepartamento"/>
+        <Component class="javax.swing.JLabel" name="lblPrecio">
+          <Properties><Property name="text" type="java.lang.String" value="Precio venta:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPrecio"/>
+        <Component class="javax.swing.JLabel" name="lblVencimiento">
+          <Properties><Property name="text" type="java.lang.String" value="Vencimiento:"/></Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtVencimiento"/>
+        <Component class="javax.swing.JButton" name="btnGuardar">
+          <Properties><Property name="text" type="java.lang.String" value="Guardar"/></Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnCancelar">
+          <Properties><Property name="text" type="java.lang.String" value="Cancelar"/></Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>
