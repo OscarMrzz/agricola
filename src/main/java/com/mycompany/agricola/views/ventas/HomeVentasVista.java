@@ -1,8 +1,17 @@
 package com.mycompany.agricola.views.ventas;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
 import com.mycompany.agricola.controllers.ventas.HomeVentasController;
 import com.mycompany.agricola.views.util.UiIcons;
 import com.mycompany.agricola.views.util.UiStyle;
+import com.mycompany.agricola.views.util.UiTheme;
 
 public class HomeVentasVista extends javax.swing.JPanel {
 
@@ -15,14 +24,75 @@ public class HomeVentasVista extends javax.swing.JPanel {
     }
 
     private void aplicarEstilos() {
-        UiStyle.aplicarVistaHome(this, lblTitulo, null,
-                btnVentas, btnNuevaVenta, btnClientes, btnInventario, btnFactura, btnAlertar);
-        UiStyle.conIcono(btnVentas, UiIcons.SALE);
-        UiStyle.conIcono(btnNuevaVenta, UiIcons.ADD);
-        UiStyle.conIcono(btnClientes, UiIcons.CLIENT);
-        UiStyle.conIcono(btnInventario, UiIcons.INVENTORY);
-        UiStyle.conIcono(btnFactura, UiIcons.PDF);
-        UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        estilizarTile(btnVentas, UiIcons.SALE);
+        estilizarTile(btnNuevaVenta, UiIcons.ADD);
+        estilizarTile(btnClientes, UiIcons.CLIENT);
+        estilizarTile(btnInventario, UiIcons.INVENTORY);
+        estilizarTile(btnAlertar, UiIcons.ALERT);
+        reorganizarLayout();
+    }
+
+    private void estilizarTile(javax.swing.JButton boton, String icono) {
+        UiStyle.estilizarBotonTile(boton);
+        UiStyle.conIconoTile(boton, icono);
+    }
+
+    private void reorganizarLayout() {
+        removeAll();
+        setLayout(new java.awt.BorderLayout());
+
+        JPanel centro = new JPanel(new GridBagLayout());
+        centro.setOpaque(false);
+
+        JPanel cuadricula = new JPanel();
+        cuadricula.setLayout(new BoxLayout(cuadricula, BoxLayout.Y_AXIS));
+        cuadricula.setOpaque(false);
+
+        int anchoFila = 3 * UiTheme.BTN_TILE.width + 2 * UiTheme.SPACE_MD;
+
+        JPanel filaSuperior = new JPanel(new GridLayout(1, 3, UiTheme.SPACE_MD, 0));
+        filaSuperior.setOpaque(false);
+        filaSuperior.setAlignmentX(CENTER_ALIGNMENT);
+        filaSuperior.setMaximumSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
+        filaSuperior.setPreferredSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
+        filaSuperior.add(btnVentas);
+        filaSuperior.add(btnNuevaVenta);
+        filaSuperior.add(btnClientes);
+
+        JPanel filaInferior = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, UiTheme.SPACE_MD, 0));
+        filaInferior.setOpaque(false);
+        filaInferior.setAlignmentX(CENTER_ALIGNMENT);
+        filaInferior.setMaximumSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
+        filaInferior.setPreferredSize(new java.awt.Dimension(anchoFila, UiTheme.BTN_TILE.height));
+        filaInferior.add(btnInventario);
+        filaInferior.add(btnAlertar);
+
+        cuadricula.add(filaSuperior);
+        cuadricula.add(Box.createVerticalStrut(UiTheme.SPACE_MD));
+        cuadricula.add(filaInferior);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        centro.add(lblTitulo, gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new java.awt.Insets(UiTheme.SPACE_XXL, 0, 0, 0);
+        centro.add(cuadricula, gbc);
+
+        add(centro, java.awt.BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
+    private JPanel celdaVacia() {
+        JPanel celda = new JPanel();
+        celda.setOpaque(false);
+        return celda;
     }
 
     private void inicializarLogica() {
@@ -30,7 +100,6 @@ public class HomeVentasVista extends javax.swing.JPanel {
         btnNuevaVenta.addActionListener(e -> controller.abrirNuevaVenta(this));
         btnClientes.addActionListener(e -> controller.abrirClientesCreditos(this));
         btnInventario.addActionListener(e -> controller.abrirInventario(this));
-        btnFactura.addActionListener(e -> controller.abrirFactura(this));
         btnAlertar.addActionListener(e -> controller.abrirAlertas(this));
     }
 
@@ -43,67 +112,21 @@ public class HomeVentasVista extends javax.swing.JPanel {
         btnNuevaVenta = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
         btnInventario = new javax.swing.JButton();
-        btnFactura = new javax.swing.JButton();
         btnAlertar = new javax.swing.JButton();
 
         lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
         lblTitulo.setText("Menu Ventas");
 
         btnVentas.setText("Ventas");
-
         btnNuevaVenta.setText("Nueva Venta");
-
         btnClientes.setText("Clientes Creditos");
-
         btnInventario.setText("Inventario");
-
-        btnFactura.setText("Factura");
-
         btnAlertar.setText("Alertar");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnVentas)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnNuevaVenta)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnClientes)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnInventario)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnFactura)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnAlertar)))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVentas)
-                    .addComponent(btnNuevaVenta)
-                    .addComponent(btnClientes)
-                    .addComponent(btnInventario)
-                    .addComponent(btnFactura)
-                    .addComponent(btnAlertar))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlertar;
     private javax.swing.JButton btnClientes;
-    private javax.swing.JButton btnFactura;
     private javax.swing.JButton btnInventario;
     private javax.swing.JButton btnNuevaVenta;
     private javax.swing.JButton btnVentas;

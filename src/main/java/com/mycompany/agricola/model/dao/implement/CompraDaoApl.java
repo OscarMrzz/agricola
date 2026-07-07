@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Statement;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -84,6 +85,43 @@ public class CompraDaoApl implements CompraDao {
         } finally {
             ConexionDB.cerrarConexion();
         }
+    }
+
+    @Override
+    public int createReturningId(CompraEntity compra) {
+        try (Connection connection = ConexionDB.getConexion();
+                PreparedStatement statement = connection.prepareStatement(
+                        "INSERT INTO compras (id_foranea_producto, id_foranea_usuario, cantidad_compra, precio_compra, fecha_expiracion, fecha_compra, no_factura, metodo_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, compra.getIdForaneaProducto());
+            statement.setInt(2, compra.getIdForaneaUsuario());
+            statement.setInt(3, compra.getCantidadCompra());
+            statement.setBigDecimal(4, compra.getPrecioCompra());
+            if (compra.getFechaExpiracion() != null) {
+                statement.setTimestamp(5, Timestamp.valueOf(compra.getFechaExpiracion()));
+            } else {
+                statement.setNull(5, Types.TIMESTAMP);
+            }
+            LocalDateTime fechaCompra = compra.getFechaCompra() != null
+                    ? compra.getFechaCompra() : LocalDateTime.now();
+            statement.setTimestamp(6, Timestamp.valueOf(fechaCompra));
+            if (compra.getNoFactura() != null) {
+                statement.setString(7, compra.getNoFactura());
+            } else {
+                statement.setNull(7, Types.VARCHAR);
+            }
+            statement.setString(8, compra.getMetodoPago());
+            statement.executeUpdate();
+            ResultSet keys = statement.getGeneratedKeys();
+            if (keys.next()) {
+                return keys.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConexionDB.cerrarConexion();
+        }
+        return -1;
     }
 
     @Override

@@ -10,6 +10,11 @@ public class InventarioEntity {
     private LocalDateTime fechaUltimaSalida;
     private int stock;
     private int stockMinimo;
+    private String nombreProducto;
+    private LocalDateTime proximoVencimiento;
+    private int cantidadPorVencer;
+    private int cantidadVencida;
+    private int stockVendible;
 
     public int getIdInventario() { return idInventario; }
     public void setIdInventario(int idInventario) { this.idInventario = idInventario; }
@@ -23,4 +28,14 @@ public class InventarioEntity {
     public void setStock(int stock) { this.stock = stock; }
     public int getStockMinimo() { return stockMinimo; }
     public void setStockMinimo(int stockMinimo) { this.stockMinimo = stockMinimo; }
+    public String getNombreProducto() { return nombreProducto; }
+    public void setNombreProducto(String nombreProducto) { this.nombreProducto = nombreProducto; }
+    public LocalDateTime getProximoVencimiento() { return proximoVencimiento; }
+    public void setProximoVencimiento(LocalDateTime proximoVencimiento) { this.proximoVencimiento = proximoVencimiento; }
+    public int getCantidadPorVencer() { return cantidadPorVencer; }
+    public void setCantidadPorVencer(int cantidadPorVencer) { this.cantidadPorVencer = cantidadPorVencer; }
+    public int getCantidadVencida() { return cantidadVencida; }
+    public void setCantidadVencida(int cantidadVencida) { this.cantidadVencida = cantidadVencida; }
+    public int getStockVendible() { return stockVendible; }
+    public void setStockVendible(int stockVendible) { this.stockVendible = stockVendible; }
 }

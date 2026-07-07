@@ -18,7 +18,7 @@ public class SeedService {
     private static final String[] TODAS_LAS_VISTAS = {
         "HomeAdminVista",
         "HomeVentasVista", "VentasVista", "FormularioAgregarVentaVista", "FormularioEditarVentaVista",
-        "ClientesVentasVista", "InventarioVentasVista", "FacturaVista",
+        "ClientesVentasVista", "InventarioVentasVista",
         "HomeComprasVista", "ComprasVista", "FormularioAgregarCompraVista", "FormularioEditarCompraVista",
         "InventarioComprasVista",
         "UsuariosVista", "FormularioAgregarUsuarioVista", "FormularioEditarUsuarioVista",
@@ -30,7 +30,7 @@ public class SeedService {
 
     private static final String[] VISTAS_VENDEDOR = {
         "HomeVentasVista", "VentasVista", "FormularioAgregarVentaVista", "FormularioEditarVentaVista",
-        "ClientesVentasVista", "InventarioVentasVista", "FacturaVista", "AlertasVista"
+        "ClientesVentasVista", "InventarioVentasVista", "AlertasVista"
     };
 
     private static final String[] VISTAS_COMPRAS = {
@@ -210,17 +210,35 @@ public class SeedService {
     }
 
     private void insertarInventario(Connection conn, int[] productoIds) throws Exception {
-        int[] stocks = {100, 50, 30, 20, 8};
         int[] minimos = {10, 15, 10, 5, 10};
         try (PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO inventario (id_producto, fecha_ultima_entrada, stock, stock_minimo) VALUES (?, GETDATE(), ?, ?)")) {
+                "INSERT INTO inventario_config (id_producto, fecha_ultima_entrada, stock_minimo) VALUES (?, GETDATE(), ?)")) {
             for (int i = 0; i < productoIds.length; i++) {
                 ps.setInt(1, productoIds[i]);
-                ps.setInt(2, stocks[i]);
-                ps.setInt(3, minimos[i]);
+                ps.setInt(2, minimos[i]);
                 ps.addBatch();
             }
             ps.executeBatch();
+        }
+
+        insertarLote(conn, productoIds[0], 20, LocalDateTime.now().plusDays(10));
+        insertarLote(conn, productoIds[0], 80, LocalDateTime.now().plusDays(365));
+        insertarLote(conn, productoIds[1], 20, LocalDateTime.now().minusDays(5));
+        insertarLote(conn, productoIds[1], 30, LocalDateTime.now().plusDays(25));
+        insertarLote(conn, productoIds[2], 30, LocalDateTime.now().plusDays(60));
+        insertarLote(conn, productoIds[3], 20, LocalDateTime.now().plusDays(200));
+        insertarLote(conn, productoIds[4], 8, LocalDateTime.now().plusDays(12));
+    }
+
+    private void insertarLote(Connection conn, int idProducto, int cantidad,
+            LocalDateTime fechaVencimiento) throws Exception {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "INSERT INTO inventario_lote (id_producto, cantidad, fecha_vencimiento, fecha_entrada) "
+                        + "VALUES (?, ?, ?, GETDATE())")) {
+            ps.setInt(1, idProducto);
+            ps.setInt(2, cantidad);
+            ps.setTimestamp(3, Timestamp.valueOf(fechaVencimiento));
+            ps.executeUpdate();
         }
     }
 }

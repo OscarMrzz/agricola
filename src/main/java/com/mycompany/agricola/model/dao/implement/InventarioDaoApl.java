@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +16,15 @@ import com.mycompany.agricola.model.entity.InventarioEntity;
 
 public class InventarioDaoApl implements InventarioDao {
 
+    private static final String CONSULTA_VISTA =
+            "SELECT * FROM vista_inventario WHERE stock > 0 "
+                    + "OR EXISTS (SELECT 1 FROM inventario_config ic WHERE ic.id_producto = vista_inventario.id_producto)";
+
     @Override
     public List<InventarioEntity> getAll() {
         List<InventarioEntity> inventarios = new ArrayList<>();
         try (Connection connection = ConexionDB.getConexion();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM inventario")) {
+                PreparedStatement statement = connection.prepareStatement(CONSULTA_VISTA)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 inventarios.add(mapearInventario(rs));
@@ -35,20 +38,8 @@ public class InventarioDaoApl implements InventarioDao {
     }
 
     @Override
-    public InventarioEntity getById(int id) {
-        InventarioEntity inventario = null;
-        try (Connection connection = ConexionDB.getConexion();
-                PreparedStatement statement = connection.prepareStatement(
-                        "SELECT * FROM inventario WHERE id_inventario = ?")) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                inventario = mapearInventario(rs);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return inventario;
+    public InventarioEntity getById(int idProducto) {
+        return getByProductoId(idProducto);
     }
 
     @Override
@@ -56,7 +47,7 @@ public class InventarioDaoApl implements InventarioDao {
         InventarioEntity inventario = null;
         try (Connection connection = ConexionDB.getConexion();
                 PreparedStatement statement = connection.prepareStatement(
-                        "SELECT * FROM inventario WHERE id_producto = ?")) {
+                        "SELECT * FROM vista_inventario WHERE id_producto = ?")) {
             statement.setInt(1, idProducto);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -72,17 +63,14 @@ public class InventarioDaoApl implements InventarioDao {
     public ResultadoPersistencia create(InventarioEntity inventario) {
         try (Connection connection = ConexionDB.getConexion();
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO inventario (id_producto, fecha_ultima_entrada, fecha_ultima_salida, stock, stock_minimo) VALUES (?, ?, ?, ?, ?)")) {
+                        "INSERT INTO inventario_config (id_producto, stock_minimo) VALUES (?, ?)")) {
             statement.setInt(1, inventario.getIdProducto());
-            setNullableTimestamp(statement, 2, inventario.getFechaUltimaEntrada());
-            setNullableTimestamp(statement, 3, inventario.getFechaUltimaSalida());
-            statement.setInt(4, inventario.getStock());
-            statement.setInt(5, inventario.getStockMinimo());
+            statement.setInt(2, inventario.getStockMinimo());
             statement.executeUpdate();
             return ResultadoPersistencia.exito();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultadoPersistencia.error(e, "crear el inventario");
+            return ResultadoPersistencia.error(e, "crear la configuracion de inventario");
         } finally {
             ConexionDB.cerrarConexion();
         }
@@ -92,13 +80,9 @@ public class InventarioDaoApl implements InventarioDao {
     public ResultadoPersistencia update(InventarioEntity inventario) {
         try (Connection connection = ConexionDB.getConexion();
                 PreparedStatement statement = connection.prepareStatement(
-                        "UPDATE inventario SET id_producto = ?, fecha_ultima_entrada = ?, fecha_ultima_salida = ?, stock = ?, stock_minimo = ? WHERE id_inventario = ?")) {
-            statement.setInt(1, inventario.getIdProducto());
-            setNullableTimestamp(statement, 2, inventario.getFechaUltimaEntrada());
-            setNullableTimestamp(statement, 3, inventario.getFechaUltimaSalida());
-            statement.setInt(4, inventario.getStock());
-            statement.setInt(5, inventario.getStockMinimo());
-            statement.setInt(6, inventario.getIdInventario());
+                        "UPDATE inventario_config SET stock_minimo = ? WHERE id_producto = ?")) {
+            statement.setInt(1, inventario.getStockMinimo());
+            statement.setInt(2, inventario.getIdProducto());
             statement.executeUpdate();
             return ResultadoPersistencia.exito();
         } catch (Exception e) {
@@ -111,18 +95,9 @@ public class InventarioDaoApl implements InventarioDao {
 
     @Override
     public ResultadoPersistencia delete(int id) {
-        try (Connection connection = ConexionDB.getConexion();
-                PreparedStatement statement = connection.prepareStatement(
-                        "DELETE FROM inventario WHERE id_inventario = ?")) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-            return ResultadoPersistencia.exito();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultadoPersistencia.error(e, "eliminar el inventario");
-        } finally {
-            ConexionDB.cerrarConexion();
-        }
+        return ResultadoPersistencia.error(
+                new UnsupportedOperationException("Eliminar inventario no soportado"),
+                "eliminar el inventario");
     }
 
     @Override
@@ -143,19 +118,12 @@ public class InventarioDaoApl implements InventarioDao {
         return advertencias;
     }
 
-    private void setNullableTimestamp(PreparedStatement statement, int index,
-            java.time.LocalDateTime fecha) throws SQLException {
-        if (fecha != null) {
-            statement.setTimestamp(index, Timestamp.valueOf(fecha));
-        } else {
-            statement.setNull(index, Types.TIMESTAMP);
-        }
-    }
-
     private InventarioEntity mapearInventario(ResultSet rs) throws SQLException {
         InventarioEntity i = new InventarioEntity();
-        i.setIdInventario(rs.getInt("id_inventario"));
-        i.setIdProducto(rs.getInt("id_producto"));
+        int idProducto = rs.getInt("id_producto");
+        i.setIdInventario(idProducto);
+        i.setIdProducto(idProducto);
+        i.setNombreProducto(rs.getString("nombre_producto"));
         Timestamp fe = rs.getTimestamp("fecha_ultima_entrada");
         if (fe != null) {
             i.setFechaUltimaEntrada(fe.toLocalDateTime());
@@ -166,6 +134,13 @@ public class InventarioDaoApl implements InventarioDao {
         }
         i.setStock(rs.getInt("stock"));
         i.setStockMinimo(rs.getInt("stock_minimo"));
+        Timestamp pv = rs.getTimestamp("proximo_vencimiento");
+        if (pv != null) {
+            i.setProximoVencimiento(pv.toLocalDateTime());
+        }
+        i.setCantidadPorVencer(rs.getInt("cantidad_por_vencer"));
+        i.setCantidadVencida(rs.getInt("cantidad_vencida"));
+        i.setStockVendible(rs.getInt("stock_vendible"));
         return i;
     }
 

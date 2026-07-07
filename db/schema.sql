@@ -82,14 +82,12 @@ CREATE TABLE clientes (
     limite_credito DECIMAL(18,2) NOT NULL DEFAULT 0
 );
 
-IF OBJECT_ID('inventario', 'U') IS NULL
-CREATE TABLE inventario (
-    id_inventario INT IDENTITY(1,1) PRIMARY KEY,
-    id_producto INT NOT NULL UNIQUE,
+IF OBJECT_ID('inventario_config', 'U') IS NULL
+CREATE TABLE inventario_config (
+    id_producto INT PRIMARY KEY,
+    stock_minimo INT NOT NULL DEFAULT 0,
     fecha_ultima_entrada DATETIME NULL,
     fecha_ultima_salida DATETIME NULL,
-    stock INT NOT NULL DEFAULT 0,
-    stock_minimo INT NOT NULL DEFAULT 0,
     FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
 );
 
@@ -106,6 +104,32 @@ CREATE TABLE compras (
     metodo_pago VARCHAR(20) NOT NULL,
     FOREIGN KEY (id_foranea_producto) REFERENCES productos(id_producto),
     FOREIGN KEY (id_foranea_usuario) REFERENCES [user](id_user)
+);
+
+IF OBJECT_ID('inventario_lote', 'U') IS NULL
+CREATE TABLE inventario_lote (
+    id_lote INT IDENTITY(1,1) PRIMARY KEY,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL DEFAULT 0,
+    fecha_vencimiento DATETIME NOT NULL,
+    fecha_entrada DATETIME NOT NULL DEFAULT GETDATE(),
+    id_compra INT NULL,
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+    FOREIGN KEY (id_compra) REFERENCES compras(id_compra)
+);
+
+IF OBJECT_ID('retiro_inventario', 'U') IS NULL
+CREATE TABLE retiro_inventario (
+    id_retiro INT IDENTITY(1,1) PRIMARY KEY,
+    id_producto INT NOT NULL,
+    id_lote INT NULL,
+    cantidad INT NOT NULL,
+    motivo VARCHAR(200) NOT NULL,
+    fecha_retiro DATETIME NOT NULL DEFAULT GETDATE(),
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+    FOREIGN KEY (id_lote) REFERENCES inventario_lote(id_lote),
+    FOREIGN KEY (id_usuario) REFERENCES [user](id_user)
 );
 
 IF OBJECT_ID('ventas', 'U') IS NULL

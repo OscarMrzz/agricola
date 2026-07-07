@@ -10,19 +10,18 @@ import java.util.UUID;
 import com.mycompany.agricola.config.AppConfig;
 import com.mycompany.agricola.controllers.TotalesLinea;
 import com.mycompany.agricola.model.dao.implement.CompraDaoApl;
-import com.mycompany.agricola.model.dao.implement.InventarioDaoApl;
 import com.mycompany.agricola.model.dao.implement.ProductoDaoApl;
 import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.CarritoCompraEntity;
 import com.mycompany.agricola.model.entity.CompraEntity;
-import com.mycompany.agricola.model.entity.InventarioEntity;
 import com.mycompany.agricola.model.entity.ProductoEntity;
+import com.mycompany.agricola.services.InventarioLoteService;
 
 public class FormularioAgregarCompraController {
 
     private final CompraDaoApl compraDao = new CompraDaoApl();
-    private final InventarioDaoApl inventarioDao = new InventarioDaoApl();
     private final ProductoDaoApl productoDao = new ProductoDaoApl();
+    private final InventarioLoteService inventarioLoteService = new InventarioLoteService();
     private final List<LineaPendiente> lineasPendientes = new ArrayList<>();
     private String noFactura = generarNoFactura();
 
@@ -65,6 +64,10 @@ public class FormularioAgregarCompraController {
         }
         if (precioCompra == null || precioCompra.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El precio de compra debe ser mayor a cero");
+        }
+
+        if (fechaExpiracion == null) {
+            throw new IllegalArgumentException("La fecha de expiracion es obligatoria");
         }
 
         BigDecimal subtotal = precioCompra.multiply(BigDecimal.valueOf(cantidad));
@@ -125,17 +128,14 @@ public class FormularioAgregarCompraController {
             compra.setFechaCompra(LocalDateTime.now());
             compra.setMetodoPago(linea.metodoPago);
 
-            ResultadoPersistencia resultado = compraDao.create(compra);
-            if (!resultado.isExito()) {
-                return resultado;
+            int idCompra = compraDao.createReturningId(compra);
+            if (idCompra < 0) {
+                return ResultadoPersistencia.error(new IllegalStateException("No se pudo registrar la compra"),
+                        "registrar la compra");
             }
 
-            InventarioEntity inventario = inventarioDao.getByProductoId(linea.idProducto);
-            if (inventario != null) {
-                inventario.setStock(inventario.getStock() + linea.cantidad);
-                inventario.setFechaUltimaEntrada(LocalDateTime.now());
-                inventarioDao.update(inventario);
-            }
+            inventarioLoteService.crearLoteDesdeCompra(
+                    linea.idProducto, linea.cantidad, linea.fechaExpiracion, idCompra);
         }
 
         lineasPendientes.clear();

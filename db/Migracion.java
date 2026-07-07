@@ -55,7 +55,16 @@ public class Migracion {
             IF OBJECT_ID('ventas', 'U') IS NOT NULL DROP TABLE ventas
             """,
             """
+            IF OBJECT_ID('retiro_inventario', 'U') IS NOT NULL DROP TABLE retiro_inventario
+            """,
+            """
+            IF OBJECT_ID('inventario_lote', 'U') IS NOT NULL DROP TABLE inventario_lote
+            """,
+            """
             IF OBJECT_ID('compras', 'U') IS NOT NULL DROP TABLE compras
+            """,
+            """
+            IF OBJECT_ID('inventario_config', 'U') IS NOT NULL DROP TABLE inventario_config
             """,
             """
             IF OBJECT_ID('inventario', 'U') IS NOT NULL DROP TABLE inventario
@@ -144,13 +153,11 @@ public class Migracion {
             )
             """,
             """
-            CREATE TABLE inventario (
-                id_inventario INT IDENTITY(1,1) PRIMARY KEY,
-                id_producto INT NOT NULL UNIQUE,
+            CREATE TABLE inventario_config (
+                id_producto INT PRIMARY KEY,
+                stock_minimo INT NOT NULL DEFAULT 0,
                 fecha_ultima_entrada DATETIME NULL,
                 fecha_ultima_salida DATETIME NULL,
-                stock INT NOT NULL DEFAULT 0,
-                stock_minimo INT NOT NULL DEFAULT 0,
                 FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
             )
             """,
@@ -167,6 +174,32 @@ public class Migracion {
                 metodo_pago VARCHAR(20) NOT NULL,
                 FOREIGN KEY (id_foranea_producto) REFERENCES productos(id_producto),
                 FOREIGN KEY (id_foranea_usuario) REFERENCES [user](id_user)
+            )
+            """,
+            """
+            CREATE TABLE inventario_lote (
+                id_lote INT IDENTITY(1,1) PRIMARY KEY,
+                id_producto INT NOT NULL,
+                cantidad INT NOT NULL DEFAULT 0,
+                fecha_vencimiento DATETIME NOT NULL,
+                fecha_entrada DATETIME NOT NULL DEFAULT GETDATE(),
+                id_compra INT NULL,
+                FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+                FOREIGN KEY (id_compra) REFERENCES compras(id_compra)
+            )
+            """,
+            """
+            CREATE TABLE retiro_inventario (
+                id_retiro INT IDENTITY(1,1) PRIMARY KEY,
+                id_producto INT NOT NULL,
+                id_lote INT NULL,
+                cantidad INT NOT NULL,
+                motivo VARCHAR(200) NOT NULL,
+                fecha_retiro DATETIME NOT NULL DEFAULT GETDATE(),
+                id_usuario INT NOT NULL,
+                FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+                FOREIGN KEY (id_lote) REFERENCES inventario_lote(id_lote),
+                FOREIGN KEY (id_usuario) REFERENCES [user](id_user)
             )
             """,
             """
@@ -268,19 +301,41 @@ public class Migracion {
             GROUP BY c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.limite_credito
             """,
             """
-            CREATE OR ALTER VIEW vista_advertencia_vencimiento AS
-            SELECT p.id_producto, p.nombre_producto, p.fecha_vencimiento,
-                DATEDIFF(DAY, GETDATE(), p.fecha_vencimiento) AS dias_restantes
+            CREATE OR ALTER VIEW vista_inventario AS
+            SELECT p.id_producto, p.nombre_producto,
+                ISNULL(SUM(CASE WHEN l.cantidad > 0 THEN l.cantidad ELSE 0 END), 0) AS stock,
+                ISNULL(ic.stock_minimo, 0) AS stock_minimo,
+                ic.fecha_ultima_entrada, ic.fecha_ultima_salida,
+                MIN(CASE WHEN l.cantidad > 0 THEN l.fecha_vencimiento END) AS proximo_vencimiento,
+                ISNULL(SUM(CASE WHEN l.cantidad > 0 AND l.fecha_vencimiento >= GETDATE()
+                    AND DATEDIFF(DAY, GETDATE(), l.fecha_vencimiento) <= 30 THEN l.cantidad ELSE 0 END), 0) AS cantidad_por_vencer,
+                ISNULL(SUM(CASE WHEN l.cantidad > 0 AND l.fecha_vencimiento < GETDATE() THEN l.cantidad ELSE 0 END), 0) AS cantidad_vencida,
+                ISNULL(SUM(CASE WHEN l.cantidad > 0 AND l.fecha_vencimiento >= GETDATE() THEN l.cantidad ELSE 0 END), 0) AS stock_vendible
             FROM productos p
-            WHERE p.fecha_vencimiento > GETDATE()
-              AND DATEDIFF(DAY, GETDATE(), p.fecha_vencimiento) <= 30
+            LEFT JOIN inventario_config ic ON p.id_producto = ic.id_producto
+            LEFT JOIN inventario_lote l ON p.id_producto = l.id_producto
+            GROUP BY p.id_producto, p.nombre_producto, ic.stock_minimo, ic.fecha_ultima_entrada, ic.fecha_ultima_salida
+            """,
+            """
+            CREATE OR ALTER VIEW vista_advertencia_vencimiento AS
+            SELECT vi.id_producto, vi.nombre_producto, vi.cantidad_por_vencer AS cantidad,
+                vi.proximo_vencimiento AS fecha_vencimiento,
+                DATEDIFF(DAY, GETDATE(), vi.proximo_vencimiento) AS dias_restantes
+            FROM vista_inventario vi
+            WHERE vi.cantidad_por_vencer > 0
+            """,
+            """
+            CREATE OR ALTER VIEW vista_advertencia_vencidos AS
+            SELECT vi.id_producto, vi.nombre_producto, vi.cantidad_vencida AS cantidad
+            FROM vista_inventario vi
+            WHERE vi.cantidad_vencida > 0
             """,
             """
             CREATE OR ALTER VIEW vista_advertencia_stock_bajo AS
-            SELECT p.id_producto, p.nombre_producto, i.stock AS stock_actual, p.departamento_origen
-            FROM inventario i
-            INNER JOIN productos p ON i.id_producto = p.id_producto
-            WHERE i.stock < i.stock_minimo
+            SELECT vi.id_producto, vi.nombre_producto, vi.stock AS stock_actual, p.departamento_origen
+            FROM vista_inventario vi
+            INNER JOIN productos p ON vi.id_producto = p.id_producto
+            WHERE vi.stock < vi.stock_minimo AND vi.stock_minimo > 0
             """
         };
         try (Statement st = conn.createStatement()) {

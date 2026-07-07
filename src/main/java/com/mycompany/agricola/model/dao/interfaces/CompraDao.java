@@ -14,6 +14,8 @@ public interface CompraDao {
 
     ResultadoPersistencia create(CompraEntity compra);
 
+    int createReturningId(CompraEntity compra);
+
     ResultadoPersistencia update(CompraEntity compra);
 
     ResultadoPersistencia delete(int id);

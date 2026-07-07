@@ -77,24 +77,52 @@ LEFT JOIN ventas v ON c.id_cliente = v.id_cliente
 GROUP BY c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.limite_credito;
 GO
 
-CREATE OR ALTER VIEW vista_advertencia_vencimiento AS
+CREATE OR ALTER VIEW vista_inventario AS
 SELECT
     p.id_producto,
     p.nombre_producto,
-    p.fecha_vencimiento,
-    DATEDIFF(DAY, GETDATE(), p.fecha_vencimiento) AS dias_restantes
+    ISNULL(SUM(CASE WHEN l.cantidad > 0 THEN l.cantidad ELSE 0 END), 0) AS stock,
+    ISNULL(ic.stock_minimo, 0) AS stock_minimo,
+    ic.fecha_ultima_entrada,
+    ic.fecha_ultima_salida,
+    MIN(CASE WHEN l.cantidad > 0 THEN l.fecha_vencimiento END) AS proximo_vencimiento,
+    ISNULL(SUM(CASE WHEN l.cantidad > 0 AND l.fecha_vencimiento >= GETDATE()
+        AND DATEDIFF(DAY, GETDATE(), l.fecha_vencimiento) <= 30 THEN l.cantidad ELSE 0 END), 0) AS cantidad_por_vencer,
+    ISNULL(SUM(CASE WHEN l.cantidad > 0 AND l.fecha_vencimiento < GETDATE() THEN l.cantidad ELSE 0 END), 0) AS cantidad_vencida,
+    ISNULL(SUM(CASE WHEN l.cantidad > 0 AND l.fecha_vencimiento >= GETDATE() THEN l.cantidad ELSE 0 END), 0) AS stock_vendible
 FROM productos p
-WHERE p.fecha_vencimiento > GETDATE()
-  AND DATEDIFF(DAY, GETDATE(), p.fecha_vencimiento) <= 30;
+LEFT JOIN inventario_config ic ON p.id_producto = ic.id_producto
+LEFT JOIN inventario_lote l ON p.id_producto = l.id_producto
+GROUP BY p.id_producto, p.nombre_producto, ic.stock_minimo, ic.fecha_ultima_entrada, ic.fecha_ultima_salida;
+GO
+
+CREATE OR ALTER VIEW vista_advertencia_vencimiento AS
+SELECT
+    vi.id_producto,
+    vi.nombre_producto,
+    vi.cantidad_por_vencer AS cantidad,
+    vi.proximo_vencimiento AS fecha_vencimiento,
+    DATEDIFF(DAY, GETDATE(), vi.proximo_vencimiento) AS dias_restantes
+FROM vista_inventario vi
+WHERE vi.cantidad_por_vencer > 0;
+GO
+
+CREATE OR ALTER VIEW vista_advertencia_vencidos AS
+SELECT
+    vi.id_producto,
+    vi.nombre_producto,
+    vi.cantidad_vencida AS cantidad
+FROM vista_inventario vi
+WHERE vi.cantidad_vencida > 0;
 GO
 
 CREATE OR ALTER VIEW vista_advertencia_stock_bajo AS
 SELECT
-    p.id_producto,
-    p.nombre_producto,
-    i.stock AS stock_actual,
+    vi.id_producto,
+    vi.nombre_producto,
+    vi.stock AS stock_actual,
     p.departamento_origen
-FROM inventario i
-INNER JOIN productos p ON i.id_producto = p.id_producto
-WHERE i.stock < i.stock_minimo;
+FROM vista_inventario vi
+INNER JOIN productos p ON vi.id_producto = p.id_producto
+WHERE vi.stock < vi.stock_minimo AND vi.stock_minimo > 0;
 GO

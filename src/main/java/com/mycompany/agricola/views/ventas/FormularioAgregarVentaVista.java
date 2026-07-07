@@ -1,7 +1,5 @@
 package com.mycompany.agricola.views.ventas;
 
-import java.io.FileOutputStream;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -10,7 +8,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.ventas.ClientesVentasController;
-import com.mycompany.agricola.controllers.ventas.FacturaController;
 import com.mycompany.agricola.controllers.ventas.FormularioAgregarVentaController;
 import com.mycompany.agricola.model.entity.CarritoVentaEntity;
 import com.mycompany.agricola.model.entity.ClienteEntity;
@@ -25,9 +22,7 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
 
     private final FormularioAgregarVentaController controller = new FormularioAgregarVentaController();
     private final ClientesVentasController clientesController = new ClientesVentasController();
-    private final FacturaController facturaController = new FacturaController();
     private DefaultTableModel modeloCarrito;
-    private String ultimaFacturaGuardada;
     private javax.swing.JButton btnEliminarFila;
 
     public FormularioAgregarVentaVista() {
@@ -70,13 +65,11 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         UiStyle.estilizarTotal(lblTotalFactura);
         UiStyle.estilizarBotonNav(btnAgregarCarrito);
         UiStyle.estilizarBoton(btnGuardarVenta, UiStyle.TipoBoton.PRIMARIO);
-        UiStyle.estilizarBotonNav(btnGenerarPdf);
         UiStyle.estilizarBoton(btnVolver, UiStyle.TipoBoton.SECUNDARIO);
         btnEliminarFila = new javax.swing.JButton("Eliminar fila");
         UiStyle.estilizarBoton(btnEliminarFila, UiStyle.TipoBoton.PELIGRO);
         UiStyle.conIcono(btnAgregarCarrito, UiIcons.CART);
         UiStyle.conIcono(btnGuardarVenta, UiIcons.SAVE);
-        UiStyle.conIcono(btnGenerarPdf, UiIcons.PDF);
         UiStyle.conIcono(btnVolver, UiIcons.EXIT);
         UiStyle.conIcono(btnEliminarFila, UiIcons.DELETE);
         reorganizarLayout();
@@ -97,8 +90,8 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         panelFormulario.add(lblTituloFormulario, gbc);
 
         agregarFilaFormulario(panelFormulario, gbc, 1, lblNoFactura, lblNoFacturaValor);
-        agregarFilaFormulario(panelFormulario, gbc, 2, lblProducto, cmbProducto);
-        agregarFilaFormulario(panelFormulario, gbc, 3, lblCliente, cmbCliente);
+        agregarFilaFormulario(panelFormulario, gbc, 2, lblCliente, cmbCliente);
+        agregarFilaFormulario(panelFormulario, gbc, 3, lblProducto, cmbProducto);
         agregarFilaFormulario(panelFormulario, gbc, 4, lblCantidad, txtCantidad);
         agregarFilaFormulario(panelFormulario, gbc, 5, lblPrecioUnitario, txtPrecioUnitario);
         agregarFilaFormulario(panelFormulario, gbc, 6, lblMetodoPago, cmbMetodoPago);
@@ -139,7 +132,6 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         barraCarrito.setOpaque(false);
         barraCarrito.add(btnEliminarFila);
         barraCarrito.add(btnGuardarVenta);
-        barraCarrito.add(btnGenerarPdf);
         panelCarrito.add(barraCarrito, java.awt.BorderLayout.SOUTH);
 
         setLayout(new java.awt.GridLayout(1, 2, com.mycompany.agricola.views.util.UiTheme.SPACE_LG, 0));
@@ -189,7 +181,6 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         btnAgregarCarrito.addActionListener(e -> agregarLinea());
         btnEliminarFila.addActionListener(e -> eliminarFilaSeleccionada());
         btnGuardarVenta.addActionListener(e -> guardarVenta());
-        btnGenerarPdf.addActionListener(e -> generarPdf());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
         actualizarCalculosLinea();
     }
@@ -255,14 +246,17 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
 
     private void guardarVenta() {
         try {
-            ClienteEntity cliente = (ClienteEntity) cmbCliente.getSelectedItem();
+            ClienteEntity cliente = controller.getClienteFactura();
+            if (cliente == null) {
+                cliente = (ClienteEntity) cmbCliente.getSelectedItem();
+            }
             String metodo = (String) cmbMetodoPago.getSelectedItem();
             var usuario = AuthService.getUsuarioActual();
             int idVendedor = usuario != null ? usuario.getIdUser() : 1;
-            ultimaFacturaGuardada = controller.getNoFactura();
+            String noFactura = controller.getNoFactura();
             var resultado = controller.guardarVenta(cliente, idVendedor, metodo);
             if (resultado.isExito()) {
-                JOptionPane.showMessageDialog(this, "Venta guardada: " + ultimaFacturaGuardada);
+                JOptionPane.showMessageDialog(this, "Venta guardada: " + noFactura);
                 lblNoFacturaValor.setText(controller.getNoFactura());
                 actualizarTablaCarrito();
             } else {
@@ -270,23 +264,6 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
             }
         } catch (CreditoExcedidoException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Credito excedido", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    private void generarPdf() {
-        if (ultimaFacturaGuardada == null) {
-            JOptionPane.showMessageDialog(this, "Guarde una venta primero");
-            return;
-        }
-        try {
-            byte[] pdf = facturaController.generarFacturaVenta(ultimaFacturaGuardada);
-            String ruta = "factura_" + ultimaFacturaGuardada + ".pdf";
-            try (FileOutputStream fos = new FileOutputStream(ruta)) {
-                fos.write(pdf);
-            }
-            JOptionPane.showMessageDialog(this, "PDF generado: " + ruta);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error reporte", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -305,6 +282,13 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         lblSubtotalFactura.setText(controller.calcularSubtotalFactura().toPlainString());
         lblIsvFactura.setText(controller.calcularIsvFactura().toPlainString());
         lblTotalFactura.setText(controller.calcularTotalFactura().toPlainString());
+        actualizarBloqueoCliente();
+    }
+
+    private void actualizarBloqueoCliente() {
+        boolean bloqueado = controller.isClienteBloqueado();
+        cmbCliente.setEnabled(!bloqueado);
+        cmbMetodoPago.setEnabled(!bloqueado);
     }
 
     @SuppressWarnings("unchecked")
@@ -332,7 +316,6 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         lblTotalLinea = new javax.swing.JLabel();
         btnAgregarCarrito = new javax.swing.JButton();
         btnGuardarVenta = new javax.swing.JButton();
-        btnGenerarPdf = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
         panelCarrito = new javax.swing.JPanel();
         lblTituloCarrito = new javax.swing.JLabel();
@@ -365,7 +348,6 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         lblTotalLinea.setText("0.00");
         btnAgregarCarrito.setText("Agregar al carrito");
         btnGuardarVenta.setText("Guardar venta");
-        btnGenerarPdf.setText("Generar PDF");
         btnVolver.setText("Volver");
         lblTituloCarrito.setFont(new java.awt.Font("Arial Black", 1, 16));
         lblTituloCarrito.setText("Carrito de productos");
@@ -395,7 +377,7 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
                     .addGroup(panelFormularioLayout.createSequentialGroup().addComponent(lblSubtotalEtiqueta, 110, 110, 110).addGap(18).addComponent(lblSubtotalLinea))
                     .addGroup(panelFormularioLayout.createSequentialGroup().addComponent(lblIsvEtiqueta, 110, 110, 110).addGap(18).addComponent(lblIsvLinea))
                     .addGroup(panelFormularioLayout.createSequentialGroup().addComponent(lblTotalEtiqueta, 110, 110, 110).addGap(18).addComponent(lblTotalLinea))
-                    .addComponent(btnAgregarCarrito).addComponent(btnGuardarVenta).addComponent(btnGenerarPdf).addComponent(btnVolver))
+                    .addComponent(btnAgregarCarrito).addComponent(btnGuardarVenta).addComponent(btnVolver))
                 .addGap(20, 20, 20)));
         panelFormularioLayout.setVerticalGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormularioLayout.createSequentialGroup().addGap(20, 20, 20).addComponent(lblTituloFormulario).addGap(18)
@@ -408,7 +390,7 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(lblSubtotalEtiqueta).addComponent(lblSubtotalLinea))
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(lblIsvEtiqueta).addComponent(lblIsvLinea))
                 .addGroup(panelFormularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(lblTotalEtiqueta).addComponent(lblTotalLinea)).addGap(18)
-                .addComponent(btnAgregarCarrito).addComponent(btnGuardarVenta).addComponent(btnGenerarPdf).addComponent(btnVolver).addContainerGap(20, Short.MAX_VALUE)));
+                .addComponent(btnAgregarCarrito).addComponent(btnGuardarVenta).addComponent(btnVolver).addContainerGap(20, Short.MAX_VALUE)));
 
         javax.swing.GroupLayout panelCarritoLayout = new javax.swing.GroupLayout(panelCarrito);
         panelCarrito.setLayout(panelCarritoLayout);
@@ -438,7 +420,6 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCarrito;
-    private javax.swing.JButton btnGenerarPdf;
     private javax.swing.JButton btnGuardarVenta;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<ClienteEntity> cmbCliente;

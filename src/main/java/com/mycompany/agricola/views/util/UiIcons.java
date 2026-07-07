@@ -20,7 +20,6 @@ public final class UiIcons {
     public static final String EXIT = BASE + "exit.svg";
     /** @deprecated usar {@link #EXIT} */
     public static final String BACK = EXIT;
-    public static final String PDF = BASE + "pdf.svg";
     public static final String SALE = BASE + "sale.svg";
     public static final String PURCHASE = BASE + "purchase.svg";
     public static final String CLIENT = BASE + "client.svg";

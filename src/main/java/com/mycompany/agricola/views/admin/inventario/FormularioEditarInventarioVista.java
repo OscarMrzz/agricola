@@ -53,7 +53,7 @@ public class FormularioEditarInventarioVista extends javax.swing.JPanel {
     private void guardar() {
         try {
             int stockMinimo = Integer.parseInt(txtStockMinimo.getText().trim());
-            var resultado = controller.actualizarStockMinimo(inventario.getIdInventario(), stockMinimo);
+            var resultado = controller.actualizarStockMinimo(inventario.getIdProducto(), stockMinimo);
             if (resultado.isExito()) {
                 JOptionPane.showMessageDialog(this, "Stock minimo actualizado correctamente");
                 SwingUtilities.getWindowAncestor(this).dispose();

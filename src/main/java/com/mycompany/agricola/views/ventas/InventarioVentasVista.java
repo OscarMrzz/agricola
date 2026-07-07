@@ -1,5 +1,7 @@
 package com.mycompany.agricola.views.ventas;
 
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -9,6 +11,8 @@ import com.mycompany.agricola.views.util.UiIcons;
 import com.mycompany.agricola.views.util.UiStyle;
 
 public class InventarioVentasVista extends javax.swing.JPanel {
+
+    private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final InventarioVentasController controller = new InventarioVentasController();
     private DefaultTableModel modelo;
@@ -30,7 +34,7 @@ public class InventarioVentasVista extends javax.swing.JPanel {
 
     private void inicializarLogica() {
         modelo = new DefaultTableModel(
-                new String[]{"No", "Producto", "Stock", "Minimo"}, 0) {
+                new String[]{"No", "Producto", "Stock", "Minimo", "Prox. vencimiento", "Por vencer", "Vencido"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -46,11 +50,18 @@ public class InventarioVentasVista extends javax.swing.JPanel {
         modelo.setRowCount(0);
         int no = 1;
         for (InventarioEntity inv : controller.listarInventario()) {
+            String nombre = inv.getNombreProducto() != null
+                    ? inv.getNombreProducto() : controller.obtenerNombreProducto(inv.getIdProducto());
+            String proximoVencimiento = inv.getProximoVencimiento() != null
+                    ? inv.getProximoVencimiento().format(FECHA_FORMATO) : "-";
             modelo.addRow(new Object[]{
                 no++,
-                controller.obtenerNombreProducto(inv.getIdProducto()),
+                nombre,
                 inv.getStock(),
-                inv.getStockMinimo()
+                inv.getStockMinimo(),
+                proximoVencimiento,
+                inv.getCantidadPorVencer(),
+                inv.getCantidadVencida()
             });
         }
     }
@@ -71,7 +82,7 @@ public class InventarioVentasVista extends javax.swing.JPanel {
 
         tablaInventario.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{},
-            new String[]{"No", "Producto", "Stock", "Minimo"}
+            new String[]{"No", "Producto", "Stock", "Minimo", "Prox. vencimiento", "Por vencer", "Vencido"}
         ));
         scrollTabla.setViewportView(tablaInventario);
 

@@ -5,7 +5,6 @@ import java.awt.Component;
 import com.mycompany.agricola.services.NavegacionService;
 import com.mycompany.agricola.views.AlertasVista;
 import com.mycompany.agricola.views.ventas.ClientesVentasVista;
-import com.mycompany.agricola.views.ventas.FacturaVista;
 import com.mycompany.agricola.views.ventas.FormularioAgregarVentaVista;
 import com.mycompany.agricola.views.ventas.InventarioVentasVista;
 import com.mycompany.agricola.views.ventas.VentasVista;
@@ -28,10 +27,6 @@ public class HomeVentasController {
 
     public void abrirInventario(Component parent) {
         navegacion.abrirVistaSiPermitida("InventarioVentasVista", new InventarioVentasVista(), parent);
-    }
-
-    public void abrirFactura(Component parent) {
-        navegacion.abrirVistaSiPermitida("FacturaVista", new FacturaVista(), parent);
     }
 
     public void abrirAlertas(Component parent) {

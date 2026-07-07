@@ -112,7 +112,9 @@ public class ProductoDaoApl implements ProductoDao {
         List<ProductoEntity> productos = new ArrayList<>();
         try (Connection connection = ConexionDB.getConexion();
                 PreparedStatement statement = connection.prepareStatement(
-                        "SELECT * FROM productos WHERE fecha_vencimiento > GETDATE()")) {
+                        "SELECT p.* FROM productos p "
+                                + "INNER JOIN vista_inventario vi ON p.id_producto = vi.id_producto "
+                                + "WHERE vi.stock_vendible > 0")) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 productos.add(mapearProducto(rs));
@@ -167,6 +169,7 @@ public class ProductoDaoApl implements ProductoDao {
             a.setFechaVencimiento(fv.toLocalDateTime());
         }
         a.setDiasRestantes(rs.getInt("dias_restantes"));
+        a.setCantidad(rs.getInt("cantidad"));
         return a;
     }
 }

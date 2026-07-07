@@ -20,6 +20,7 @@ import com.mycompany.agricola.model.entity.VentaEntity;
 import com.mycompany.agricola.model.entity.VentasDetalleEntity;
 import com.mycompany.agricola.services.CreditoExcedidoException;
 import com.mycompany.agricola.services.CreditosClientesService;
+import com.mycompany.agricola.services.InventarioLoteService;
 import com.mycompany.agricola.services.ProductosAptosParaVenderService;
 
 public class FormularioAgregarVentaController {
@@ -28,9 +29,11 @@ public class FormularioAgregarVentaController {
 
     private final VentaDaoApl ventaDao = new VentaDaoApl();
     private final InventarioDaoApl inventarioDao = new InventarioDaoApl();
+    private final InventarioLoteService inventarioLoteService = new InventarioLoteService();
     private final ProductosAptosParaVenderService productosAptosService = new ProductosAptosParaVenderService();
     private final CreditosClientesService creditosService = new CreditosClientesService();
     private final List<CarritoVentaEntity> carrito = new ArrayList<>();
+    private ClienteEntity clienteFactura;
     private String noFactura;
 
     public FormularioAgregarVentaController() {
@@ -47,6 +50,14 @@ public class FormularioAgregarVentaController {
 
     public String getNoFactura() {
         return noFactura;
+    }
+
+    public ClienteEntity getClienteFactura() {
+        return clienteFactura;
+    }
+
+    public boolean isClienteBloqueado() {
+        return !carrito.isEmpty();
     }
 
     public TotalesLinea calcularTotalesLinea(ProductoEntity producto, int cantidad) {
@@ -73,9 +84,21 @@ public class FormularioAgregarVentaController {
         if (producto.getPrecioVenta() == null) {
             throw new IllegalArgumentException("El producto no tiene precio de venta");
         }
+        if (clienteFactura == null) {
+            clienteFactura = cliente;
+        } else if (clienteFactura.getIdCliente() != cliente.getIdCliente()) {
+            throw new IllegalArgumentException(
+                    "La factura solo puede tener un cliente. Elimine el carrito para cambiar de cliente.");
+        }
 
         InventarioEntity inventario = inventarioDao.getByProductoId(producto.getIdProducto());
-        if (inventario != null && inventario.getStock() < cantidad) {
+        int stockVendible = inventario != null ? inventario.getStockVendible() : 0;
+        if (cantidad > stockVendible) {
+            int vencidos = inventario != null ? inventario.getCantidadVencida() : 0;
+            if (vencidos > 0) {
+                throw new IllegalArgumentException(
+                        vencidos + " productos en el almacen estan vencidos. Solo puedes vender " + stockVendible + ".");
+            }
             throw new IllegalArgumentException("Stock insuficiente para " + producto.getNombreProducto());
         }
 
@@ -126,11 +149,17 @@ public class FormularioAgregarVentaController {
     public void eliminarLinea(int indice) {
         if (indice >= 0 && indice < carrito.size()) {
             carrito.remove(indice);
+            if (carrito.isEmpty()) {
+                clienteFactura = null;
+            }
         }
     }
 
     public ResultadoPersistencia guardarVenta(ClienteEntity cliente, int idVendedor, String metodoPago)
             throws CreditoExcedidoException {
+        if (clienteFactura != null) {
+            cliente = clienteFactura;
+        }
         if (cliente == null) {
             return ResultadoPersistencia.error(new IllegalStateException("Cliente no seleccionado"), "registrar la venta");
         }
@@ -168,15 +197,15 @@ public class FormularioAgregarVentaController {
                 return resultado;
             }
 
-            InventarioEntity registroInventario = inventarioDao.getByProductoId(linea.getIdProducto());
-            if (registroInventario != null) {
-                registroInventario.setStock(registroInventario.getStock() - cantidad);
-                registroInventario.setFechaUltimaSalida(LocalDateTime.now());
-                inventarioDao.update(registroInventario);
+            ResultadoPersistencia descuento = inventarioLoteService.descontarParaVenta(
+                    linea.getIdProducto(), cantidad);
+            if (!descuento.isExito()) {
+                return descuento;
             }
         }
 
         carrito.clear();
+        clienteFactura = null;
         noFactura = generarNoFactura();
         return ResultadoPersistencia.exito();
     }
