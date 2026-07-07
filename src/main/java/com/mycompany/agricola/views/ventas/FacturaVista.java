@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import javax.swing.JOptionPane;
 
 import com.mycompany.agricola.controllers.ventas.FacturaController;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FacturaVista extends javax.swing.JPanel {
 
@@ -12,7 +14,15 @@ public class FacturaVista extends javax.swing.JPanel {
 
     public FacturaVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarBoton(btnReporte, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.conIcono(btnReporte, UiIcons.PDF);
     }
 
     private void inicializarLogica() {

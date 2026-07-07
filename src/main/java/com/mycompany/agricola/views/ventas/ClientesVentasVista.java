@@ -5,15 +5,27 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.ventas.ClientesVentasController;
 import com.mycompany.agricola.model.entity.CreditosClientesDetalleEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class ClientesVentasVista extends javax.swing.JPanel {
 
     private final ClientesVentasController controller = new ClientesVentasController();
     private DefaultTableModel modelo;
+    private javax.swing.JButton btnRefrescar;
 
     public ClientesVentasVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        btnRefrescar = UiStyle.crearBotonRefrescar();
+        UiStyle.estilizarTabla(tablaClientes);
+        UiStyle.estilizarBotonNav(btnVolver);
+        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla, btnRefrescar, btnVolver);
     }
 
     private void inicializarLogica() {
@@ -26,6 +38,7 @@ public class ClientesVentasVista extends javax.swing.JPanel {
         };
         tablaClientes.setModel(modelo);
         cargarDatos();
+        btnRefrescar.addActionListener(e -> cargarDatos());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
     }
 

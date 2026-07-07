@@ -15,6 +15,7 @@ import com.mycompany.agricola.model.dao.interfaces.CompraDao;
 import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
 import com.mycompany.agricola.model.entity.CompraEntity;
 import com.mycompany.agricola.model.entity.ComprasDetalleEntity;
+import com.mycompany.agricola.model.entity.FacturaCompraEntity;
 
 public class CompraDaoApl implements CompraDao {
 
@@ -134,11 +135,64 @@ public class CompraDaoApl implements CompraDao {
     }
 
     @Override
+    public ResultadoPersistencia deleteByFactura(String noFactura) {
+        try (Connection connection = ConexionDB.getConexion();
+                PreparedStatement statement = connection.prepareStatement(
+                        "DELETE FROM compras WHERE no_factura = ?")) {
+            statement.setString(1, noFactura);
+            statement.executeUpdate();
+            return ResultadoPersistencia.exito();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultadoPersistencia.error(e, "eliminar la factura");
+        } finally {
+            ConexionDB.cerrarConexion();
+        }
+    }
+
+    @Override
+    public List<FacturaCompraEntity> getAllFacturas() {
+        List<FacturaCompraEntity> facturas = new ArrayList<>();
+        try (Connection connection = ConexionDB.getConexion();
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT * FROM vista_facturas_compra ORDER BY fecha_compra DESC")) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                facturas.add(mapearFactura(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConexionDB.cerrarConexion();
+        }
+        return facturas;
+    }
+
+    @Override
     public List<ComprasDetalleEntity> getAllDetalle() {
         List<ComprasDetalleEntity> detalles = new ArrayList<>();
         try (Connection connection = ConexionDB.getConexion();
                 PreparedStatement statement = connection.prepareStatement(
                         "SELECT * FROM vista_compras_detalle")) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                detalles.add(mapearCompraDetalle(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConexionDB.cerrarConexion();
+        }
+        return detalles;
+    }
+
+    @Override
+    public List<ComprasDetalleEntity> getDetalleByFactura(String noFactura) {
+        List<ComprasDetalleEntity> detalles = new ArrayList<>();
+        try (Connection connection = ConexionDB.getConexion();
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT * FROM vista_compras_detalle WHERE no_factura = ?")) {
+            statement.setString(1, noFactura);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 detalles.add(mapearCompraDetalle(rs));
@@ -166,6 +220,20 @@ public class CompraDaoApl implements CompraDao {
             e.printStackTrace();
         }
         return detalle;
+    }
+
+    private FacturaCompraEntity mapearFactura(ResultSet rs) throws SQLException {
+        FacturaCompraEntity f = new FacturaCompraEntity();
+        f.setNoFactura(rs.getString("no_factura"));
+        Timestamp fc = rs.getTimestamp("fecha_compra");
+        if (fc != null) {
+            f.setFechaCompra(fc.toLocalDateTime());
+        }
+        f.setMetodoPago(rs.getString("metodo_pago"));
+        f.setSubtotal(rs.getBigDecimal("subtotal"));
+        f.setImpuesto(rs.getBigDecimal("impuesto"));
+        f.setTotal(rs.getBigDecimal("total"));
+        return f;
     }
 
     private CompraEntity mapearCompra(ResultSet rs) throws SQLException {

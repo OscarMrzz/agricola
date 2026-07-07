@@ -10,6 +10,8 @@ import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.admin.productos.FormularioEditarProductoController;
 import com.mycompany.agricola.model.entity.ProductoEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarProductoVista extends javax.swing.JPanel {
 
@@ -20,6 +22,7 @@ public class FormularioEditarProductoVista extends javax.swing.JPanel {
 
     public FormularioEditarProductoVista(int id) {
         initComponents();
+        aplicarEstilos();
         producto = controller.obtenerPorId(id);
         if (producto == null) {
             panelFormulario.setVisible(false);
@@ -27,6 +30,27 @@ public class FormularioEditarProductoVista extends javax.swing.JPanel {
         } else {
             inicializarLogica();
         }
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarFormPanel(panelFormulario, "Datos");
+        UiStyle.estilizarError(lblNoEncontrado);
+        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(lblNombre);
+        UiStyle.estilizarInput(txtNombre);
+        UiStyle.estilizarCuerpo(lblCategoria);
+        UiStyle.estilizarInput(txtCategoria);
+        UiStyle.estilizarCuerpo(lblDepartamento);
+        UiStyle.estilizarInput(txtDepartamento);
+        UiStyle.estilizarCuerpo(lblPrecio);
+        UiStyle.estilizarInput(txtPrecio);
+        UiStyle.estilizarCuerpo(lblVencimiento);
+        UiStyle.estilizarInput(txtVencimiento);
     }
 
     private void inicializarLogica() {

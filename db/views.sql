@@ -1,6 +1,19 @@
 USE db_agricola;
 GO
 
+CREATE OR ALTER VIEW vista_facturas_venta AS
+SELECT
+    v.no_factura,
+    MIN(v.fecha_venta) AS fecha_venta,
+    MAX(CONCAT(c.nombre_cliente, ' ', c.apellido_cliente)) AS cliente,
+    SUM(v.precio_antes_impuesto * v.cantidad_producto) AS subtotal,
+    SUM(v.impuesto) AS impuesto,
+    SUM(v.total_pagar) AS total
+FROM ventas v
+INNER JOIN clientes c ON v.id_cliente = c.id_cliente
+GROUP BY v.no_factura;
+GO
+
 CREATE OR ALTER VIEW vista_ventas_detalle AS
 SELECT
     v.id_venta,
@@ -33,6 +46,18 @@ SELECT
     (co.precio_compra * co.cantidad_compra) * 1.15 AS total_a_pagar
 FROM compras co
 INNER JOIN productos p ON co.id_foranea_producto = p.id_producto;
+GO
+
+CREATE OR ALTER VIEW vista_facturas_compra AS
+SELECT
+    co.no_factura,
+    MIN(co.fecha_compra) AS fecha_compra,
+    MAX(co.metodo_pago) AS metodo_pago,
+    SUM(co.precio_compra * co.cantidad_compra) AS subtotal,
+    SUM((co.precio_compra * co.cantidad_compra) * 0.15) AS impuesto,
+    SUM((co.precio_compra * co.cantidad_compra) * 1.15) AS total
+FROM compras co
+GROUP BY co.no_factura;
 GO
 
 CREATE OR ALTER VIEW vista_creditos_clientes AS

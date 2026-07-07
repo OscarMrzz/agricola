@@ -5,6 +5,8 @@ import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.admin.inventario.FormularioEditarInventarioController;
 import com.mycompany.agricola.model.entity.InventarioEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarInventarioVista extends javax.swing.JPanel {
 
@@ -13,6 +15,7 @@ public class FormularioEditarInventarioVista extends javax.swing.JPanel {
 
     public FormularioEditarInventarioVista(int id) {
         initComponents();
+        aplicarEstilos();
         inventario = controller.obtenerPorId(id);
         if (inventario == null) {
             panelFormulario.setVisible(false);
@@ -20,6 +23,23 @@ public class FormularioEditarInventarioVista extends javax.swing.JPanel {
         } else {
             inicializarLogica();
         }
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarFormPanel(panelFormulario, "Datos");
+        UiStyle.estilizarError(lblNoEncontrado);
+        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(lblIdProducto);
+        UiStyle.estilizarCuerpo(lblIdProductoValor);
+        UiStyle.estilizarCuerpo(lblStockActual);
+        UiStyle.estilizarCuerpo(lblStockActualValor);
+        UiStyle.estilizarCuerpo(lblStockMinimo);
+        UiStyle.estilizarInput(txtStockMinimo);
     }
 
     private void inicializarLogica() {

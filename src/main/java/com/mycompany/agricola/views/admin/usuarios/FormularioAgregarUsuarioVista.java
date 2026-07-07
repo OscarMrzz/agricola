@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 import com.mycompany.agricola.controllers.admin.usuarios.FormularioAgregarUsuarioController;
 import com.mycompany.agricola.model.entity.RolEntity;
 import com.mycompany.agricola.model.entity.UsuarioEntity;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioAgregarUsuarioVista extends javax.swing.JPanel {
 
@@ -13,7 +14,13 @@ public class FormularioAgregarUsuarioVista extends javax.swing.JPanel {
 
     public FormularioAgregarUsuarioVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarVistaFormulario(this, lblTitulo, btnGuardar, btnCancelar,
+                lblNombre, txtNombre, lblPassword, txtPassword, lblRol, cmbRol, lblEstado);
     }
 
     private void inicializarLogica() {

@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.admin.usuarios.UsuariosController;
 import com.mycompany.agricola.model.entity.UsuarioEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiUtil;
 
 public class UsuariosVista extends javax.swing.JPanel {
@@ -16,10 +18,27 @@ public class UsuariosVista extends javax.swing.JPanel {
     private final UsuariosController controller = new UsuariosController();
     private DefaultTableModel modelo;
     private List<UsuarioEntity> usuariosCache = new ArrayList<>();
+    private javax.swing.JButton btnRefrescar;
 
     public UsuariosVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        btnRefrescar = UiStyle.crearBotonRefrescar();
+        UiStyle.estilizarTabla(tablaUsuarios);
+        UiStyle.estilizarBotonNav(btnAgregar);
+        UiStyle.estilizarBotonNav(btnEditar);
+        UiStyle.estilizarBotonNav(btnEliminar);
+        UiStyle.estilizarBotonNav(btnVolver);
+        UiStyle.conIcono(btnAgregar, UiIcons.ADD);
+        UiStyle.conIcono(btnEditar, UiIcons.EDIT);
+        UiStyle.conIcono(btnEliminar, UiIcons.DELETE);
+        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla,
+                btnAgregar, btnEditar, btnEliminar, btnRefrescar, btnVolver);
     }
 
     private void inicializarLogica() {
@@ -32,9 +51,10 @@ public class UsuariosVista extends javax.swing.JPanel {
         };
         tablaUsuarios.setModel(modelo);
         cargarDatos();
-        btnAgregar.addActionListener(e -> UiUtil.abrirFrame(new FormularioAgregarUsuarioVista(), "Agregar Usuario"));
+        btnAgregar.addActionListener(e -> UiUtil.abrirFrameFormulario(new FormularioAgregarUsuarioVista(), "Agregar Usuario"));
         btnEditar.addActionListener(e -> editarSeleccionado());
         btnEliminar.addActionListener(e -> eliminarSeleccionado());
+        btnRefrescar.addActionListener(e -> cargarDatos());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
     }
 
@@ -56,7 +76,7 @@ public class UsuariosVista extends javax.swing.JPanel {
         int fila = UiUtil.obtenerFilaSeleccionada(tablaUsuarios);
         if (fila >= 0 && fila < usuariosCache.size()) {
             int id = usuariosCache.get(fila).getIdUser();
-            UiUtil.abrirFrame(new FormularioEditarUsuarioVista(id), "Editar Usuario");
+            UiUtil.abrirFrameFormulario(new FormularioEditarUsuarioVista(id), "Editar Usuario");
         }
     }
 

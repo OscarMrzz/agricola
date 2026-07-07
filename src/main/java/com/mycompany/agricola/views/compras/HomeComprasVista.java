@@ -1,6 +1,8 @@
 package com.mycompany.agricola.views.compras;
 
 import com.mycompany.agricola.controllers.compras.HomeComprasController;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class HomeComprasVista extends javax.swing.JPanel {
 
@@ -8,7 +10,17 @@ public class HomeComprasVista extends javax.swing.JPanel {
 
     public HomeComprasVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarVistaHome(this, lblTitulo, null,
+                btnCompras, btnNuevaCompra, btnInventario, btnAlertar);
+        UiStyle.conIcono(btnCompras, UiIcons.PURCHASE);
+        UiStyle.conIcono(btnNuevaCompra, UiIcons.ADD);
+        UiStyle.conIcono(btnInventario, UiIcons.INVENTORY);
+        UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
     }
 
     private void inicializarLogica() {

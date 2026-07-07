@@ -1,21 +1,79 @@
 package com.mycompany.agricola.views;
 
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.AlertasController;
 import com.mycompany.agricola.model.entity.AdvertenciaStockBajoEntity;
 import com.mycompany.agricola.model.entity.AdvertenciaVencimientoEntity;
+import com.mycompany.agricola.views.util.UiStyle;
+import com.mycompany.agricola.views.util.UiTheme;
 
 public class AlertasVista extends javax.swing.JPanel {
 
     private final AlertasController controller = new AlertasController();
+    private javax.swing.JButton btnRefrescar;
 
     public AlertasVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
     }
 
+    private void aplicarEstilos() {
+        btnRefrescar = UiStyle.crearBotonRefrescar();
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarSeccion(lblVencimiento);
+        UiStyle.estilizarSeccion(lblStock);
+        UiStyle.estilizarTabla(tablaVencimiento);
+        UiStyle.estilizarTabla(tablaStock);
+        UiStyle.estilizarScrollTabla(scrollVencimiento);
+        UiStyle.estilizarScrollTabla(scrollStock);
+        reorganizarLayout();
+    }
+
+    private void reorganizarLayout() {
+        removeAll();
+        setLayout(new java.awt.BorderLayout(0, UiTheme.SPACE_LG));
+        UiStyle.aplicarPagina(this);
+
+        JPanel encabezado = new javax.swing.JPanel(new java.awt.BorderLayout(0, UiTheme.SPACE_MD));
+        encabezado.setOpaque(false);
+        encabezado.add(lblTitulo, java.awt.BorderLayout.NORTH);
+
+        JPanel barra = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, UiTheme.SPACE_SM, 0));
+        barra.setOpaque(false);
+        barra.add(btnRefrescar);
+        encabezado.add(barra, java.awt.BorderLayout.CENTER);
+        add(encabezado, java.awt.BorderLayout.NORTH);
+
+        JPanel contenido = new javax.swing.JPanel(new java.awt.BorderLayout(0, UiTheme.SPACE_XXL));
+        contenido.setOpaque(false);
+
+        JPanel seccionVencimiento = new javax.swing.JPanel(new java.awt.BorderLayout(0, UiTheme.SPACE_MD));
+        seccionVencimiento.setOpaque(false);
+        seccionVencimiento.add(lblVencimiento, java.awt.BorderLayout.NORTH);
+        seccionVencimiento.add(scrollVencimiento, java.awt.BorderLayout.CENTER);
+        contenido.add(seccionVencimiento, java.awt.BorderLayout.CENTER);
+
+        JPanel seccionStock = new javax.swing.JPanel(new java.awt.BorderLayout(0, UiTheme.SPACE_MD));
+        seccionStock.setOpaque(false);
+        seccionStock.add(lblStock, java.awt.BorderLayout.NORTH);
+        seccionStock.add(scrollStock, java.awt.BorderLayout.CENTER);
+        scrollStock.setPreferredSize(new java.awt.Dimension(0, 180));
+        contenido.add(seccionStock, java.awt.BorderLayout.SOUTH);
+
+        add(contenido, java.awt.BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
     private void inicializarLogica() {
+        cargarDatos();
+        btnRefrescar.addActionListener(e -> cargarDatos());
+    }
+
+    private void cargarDatos() {
         DefaultTableModel modeloVencimiento = new DefaultTableModel(
                 new String[]{"No", "Producto", "Fecha vencimiento", "Dias restantes"}, 0) {
             @Override
@@ -64,19 +122,14 @@ public class AlertasVista extends javax.swing.JPanel {
         scrollStock = new javax.swing.JScrollPane();
         tablaStock = new javax.swing.JTable();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
         lblTitulo.setText("Alertas");
-
         lblVencimiento.setText("Productos por vencer");
-
         tablaVencimiento.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{},
             new String[]{"No", "Producto", "Fecha vencimiento", "Dias restantes"}
         ));
         scrollVencimiento.setViewportView(tablaVencimiento);
-
         lblStock.setText("Stock bajo");
-
         tablaStock.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{},
             new String[]{"No", "Producto", "Stock actual"}
@@ -87,30 +140,11 @@ public class AlertasVista extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addComponent(lblVencimiento)
-                    .addComponent(scrollVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                    .addComponent(lblStock)
-                    .addComponent(scrollStock, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(lblVencimiento)
-                .addGap(8, 8, 8)
-                .addComponent(scrollVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(lblStock)
-                .addGap(8, 8, 8)
-                .addComponent(scrollStock, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

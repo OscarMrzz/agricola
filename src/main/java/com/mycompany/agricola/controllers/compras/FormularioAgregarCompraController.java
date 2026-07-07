@@ -85,6 +85,12 @@ public class FormularioAgregarCompraController {
         lineasPendientes.add(linea);
     }
 
+    public void eliminarLinea(int indice) {
+        if (indice >= 0 && indice < lineasPendientes.size()) {
+            lineasPendientes.remove(indice);
+        }
+    }
+
     public BigDecimal calcularTotalFactura() {
         return lineasPendientes.stream()
                 .map(l -> l.total)

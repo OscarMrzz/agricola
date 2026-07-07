@@ -1,5 +1,7 @@
 package com.mycompany.agricola.views.ventas;
 
+import java.awt.Frame;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,24 +10,46 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.ventas.VentasController;
-import com.mycompany.agricola.model.entity.VentasDetalleEntity;
+import com.mycompany.agricola.model.entity.FacturaVentaEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiUtil;
 
 public class VentasVista extends javax.swing.JPanel {
 
+    private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     private final VentasController controller = new VentasController();
     private DefaultTableModel modelo;
-    private List<VentasDetalleEntity> ventasCache = new ArrayList<>();
+    private List<FacturaVentaEntity> facturasCache = new ArrayList<>();
+    private javax.swing.JButton btnRefrescar;
+    private javax.swing.JButton btnVer;
 
     public VentasVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        btnRefrescar = UiStyle.crearBotonRefrescar();
+        btnVer = new javax.swing.JButton("Ver");
+        UiStyle.estilizarTabla(tablaVentas);
+        UiStyle.estilizarBotonNav(btnAgregar);
+        UiStyle.estilizarBotonNav(btnVer);
+        UiStyle.estilizarBotonNav(btnEliminar);
+        UiStyle.estilizarBotonNav(btnVolver);
+        UiStyle.conIcono(btnAgregar, UiIcons.ADD);
+        UiStyle.conIcono(btnVer, UiIcons.VIEW);
+        UiStyle.conIcono(btnEliminar, UiIcons.DELETE);
+        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla,
+                btnAgregar, btnVer, btnEliminar, btnRefrescar, btnVolver);
     }
 
     private void inicializarLogica() {
         modelo = new DefaultTableModel(
-                new String[]{"No", "No.Factura", "Cliente", "Fecha", "Producto", "Cant.",
-                    "Metodo", "Precio", "Subtotal", "ISV", "Total"}, 0) {
+                new String[]{"No", "No. Factura", "Fecha", "Cliente", "Total"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -33,50 +57,55 @@ public class VentasVista extends javax.swing.JPanel {
         };
         tablaVentas.setModel(modelo);
         cargarDatos();
-        btnAgregar.addActionListener(e -> UiUtil.abrirFrame(new FormularioAgregarVentaVista(), "Nueva Venta", 1100, 620));
-        btnEditar.addActionListener(e -> editarSeleccionado());
-        btnEliminar.addActionListener(e -> eliminarSeleccionado());
+        btnAgregar.addActionListener(e -> UiUtil.abrirFrame(new FormularioAgregarVentaVista(), "Nueva Venta", 1120, 680));
+        btnVer.addActionListener(e -> verSeleccionada());
+        btnEliminar.addActionListener(e -> eliminarSeleccionada());
+        btnRefrescar.addActionListener(e -> cargarDatos());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
     }
 
     private void cargarDatos() {
         modelo.setRowCount(0);
-        ventasCache = controller.listarVentasDetalle();
+        facturasCache = controller.listarFacturas();
         int no = 1;
-        for (VentasDetalleEntity v : ventasCache) {
+        for (FacturaVentaEntity factura : facturasCache) {
+            String fecha = factura.getFechaVenta() != null
+                    ? factura.getFechaVenta().format(FECHA_FORMATO) : "-";
             modelo.addRow(new Object[]{
                 no++,
-                v.getNoFactura(),
-                v.getCliente(),
-                v.getFechaVenta(),
-                v.getNombreProducto(),
-                v.getCantidadProducto(),
-                v.getMetodoPago(),
-                v.getPrecioUnitario(),
-                v.getSubtotal(),
-                v.getImpuesto(),
-                v.getTotalAPagar()
+                factura.getNoFactura(),
+                fecha,
+                factura.getCliente(),
+                factura.getTotal()
             });
         }
     }
 
-    private void editarSeleccionado() {
+    private void verSeleccionada() {
         int fila = UiUtil.obtenerFilaSeleccionada(tablaVentas);
-        if (fila >= 0 && fila < ventasCache.size()) {
-            int id = ventasCache.get(fila).getIdVenta();
-            UiUtil.abrirFrame(new FormularioEditarVentaVista(id), "Editar Venta");
+        if (fila >= 0 && fila < facturasCache.size()) {
+            FacturaVentaEntity factura = facturasCache.get(fila);
+            Frame owner = (Frame) SwingUtilities.getWindowAncestor(this);
+            VerFacturaDialog dialog = new VerFacturaDialog(owner, factura, controller);
+            dialog.setVisible(true);
         }
     }
 
-    private void eliminarSeleccionado() {
+    private void eliminarSeleccionada() {
         int fila = UiUtil.obtenerFilaSeleccionada(tablaVentas);
-        if (fila >= 0 && fila < ventasCache.size() && UiUtil.confirmarEliminar(this)) {
-            int id = ventasCache.get(fila).getIdVenta();
-            var resultado = controller.eliminar(id);
-            if (resultado.isExito()) {
-                cargarDatos();
-            } else {
-                JOptionPane.showMessageDialog(this, resultado.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (fila >= 0 && fila < facturasCache.size()) {
+            int respuesta = JOptionPane.showConfirmDialog(this,
+                    "Desea eliminar la factura seleccionada y todos sus registros?",
+                    "Confirmar eliminacion",
+                    JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                String noFactura = facturasCache.get(fila).getNoFactura();
+                var resultado = controller.eliminarFactura(noFactura);
+                if (resultado.isExito()) {
+                    cargarDatos();
+                } else {
+                    JOptionPane.showMessageDialog(this, resultado.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
@@ -87,23 +116,19 @@ public class VentasVista extends javax.swing.JPanel {
 
         lblTitulo = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
         scrollTabla = new javax.swing.JScrollPane();
         tablaVentas = new javax.swing.JTable();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
         lblTitulo.setText("Listado de ventas");
-
         btnAgregar.setText("Agregar");
-        btnEditar.setText("Editar");
         btnEliminar.setText("Eliminar");
         btnVolver.setText("Volver");
 
         tablaVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{},
-            new String[]{"No", "No.Factura", "Cliente", "Fecha", "Producto", "Cant.", "Metodo", "Precio", "Subtotal", "ISV", "Total"}
+            new String[]{"No", "No. Factura", "Fecha", "Cliente", "Total"}
         ));
         scrollTabla.setViewportView(tablaVentas);
 
@@ -111,41 +136,16 @@ public class VentasVista extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAgregar)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnEditar)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnEliminar)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnVolver))
-                    .addComponent(scrollTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar)
-                    .addComponent(btnEditar)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnVolver))
-                .addGap(18, 18, 18)
-                .addComponent(scrollTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel lblTitulo;

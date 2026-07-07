@@ -12,6 +12,7 @@ import java.util.List;
 import com.mycompany.agricola.model.conexion.ConexionDB;
 import com.mycompany.agricola.model.dao.interfaces.VentaDao;
 import com.mycompany.agricola.model.dao.resultados.ResultadoPersistencia;
+import com.mycompany.agricola.model.entity.FacturaVentaEntity;
 import com.mycompany.agricola.model.entity.VentaEntity;
 import com.mycompany.agricola.model.entity.VentasDetalleEntity;
 
@@ -123,6 +124,40 @@ public class VentaDaoApl implements VentaDao {
     }
 
     @Override
+    public ResultadoPersistencia deleteByFactura(String noFactura) {
+        try (Connection connection = ConexionDB.getConexion();
+                PreparedStatement statement = connection.prepareStatement(
+                        "DELETE FROM ventas WHERE no_factura = ?")) {
+            statement.setString(1, noFactura);
+            statement.executeUpdate();
+            return ResultadoPersistencia.exito();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultadoPersistencia.error(e, "eliminar la factura");
+        } finally {
+            ConexionDB.cerrarConexion();
+        }
+    }
+
+    @Override
+    public List<FacturaVentaEntity> getAllFacturas() {
+        List<FacturaVentaEntity> facturas = new ArrayList<>();
+        try (Connection connection = ConexionDB.getConexion();
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT * FROM vista_facturas_venta ORDER BY fecha_venta DESC")) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                facturas.add(mapearFactura(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConexionDB.cerrarConexion();
+        }
+        return facturas;
+    }
+
+    @Override
     public List<VentasDetalleEntity> getAllDetalle() {
         List<VentasDetalleEntity> detalles = new ArrayList<>();
         try (Connection connection = ConexionDB.getConexion();
@@ -157,6 +192,20 @@ public class VentaDaoApl implements VentaDao {
             ConexionDB.cerrarConexion();
         }
         return detalles;
+    }
+
+    private FacturaVentaEntity mapearFactura(ResultSet rs) throws SQLException {
+        FacturaVentaEntity f = new FacturaVentaEntity();
+        f.setNoFactura(rs.getString("no_factura"));
+        Timestamp fv = rs.getTimestamp("fecha_venta");
+        if (fv != null) {
+            f.setFechaVenta(fv.toLocalDateTime());
+        }
+        f.setCliente(rs.getString("cliente"));
+        f.setSubtotal(rs.getBigDecimal("subtotal"));
+        f.setImpuesto(rs.getBigDecimal("impuesto"));
+        f.setTotal(rs.getBigDecimal("total"));
+        return f;
     }
 
     private VentaEntity mapearVenta(ResultSet rs) throws SQLException {

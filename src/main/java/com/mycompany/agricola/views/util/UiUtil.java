@@ -14,7 +14,7 @@ public final class UiUtil {
     }
 
     public static void abrirFrame(JPanel panel, String titulo) {
-        abrirFrame(panel, titulo, 900, 600);
+        abrirFrame(panel, titulo, 960, 640);
     }
 
     public static void abrirFrame(JPanel panel, String titulo, int ancho, int alto) {
@@ -22,8 +22,13 @@ public final class UiUtil {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(panel);
         frame.setSize(ancho, alto);
+        frame.setMinimumSize(new Dimension(ancho, alto));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    public static void abrirFrameFormulario(JPanel panel, String titulo) {
+        abrirFrame(panel, titulo, 520, 420);
     }
 
     public static void mostrarVistaEnFrame(JFrame frame, JPanel panel, String titulo, Dimension tamano) {
@@ -31,6 +36,7 @@ public final class UiUtil {
         frame.setTitle(titulo);
         frame.add(panel);
         frame.setSize(tamano);
+        frame.setMinimumSize(tamano);
         frame.revalidate();
         frame.repaint();
         frame.setLocationRelativeTo(null);

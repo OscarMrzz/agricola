@@ -123,6 +123,12 @@ public class FormularioAgregarVentaController {
         return isv;
     }
 
+    public void eliminarLinea(int indice) {
+        if (indice >= 0 && indice < carrito.size()) {
+            carrito.remove(indice);
+        }
+    }
+
     public ResultadoPersistencia guardarVenta(ClienteEntity cliente, int idVendedor, String metodoPago)
             throws CreditoExcedidoException {
         if (cliente == null) {

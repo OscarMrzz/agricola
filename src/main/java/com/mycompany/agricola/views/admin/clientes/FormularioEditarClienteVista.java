@@ -7,6 +7,8 @@ import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.admin.clientes.FormularioEditarClienteController;
 import com.mycompany.agricola.model.entity.ClienteEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarClienteVista extends javax.swing.JPanel {
 
@@ -15,6 +17,7 @@ public class FormularioEditarClienteVista extends javax.swing.JPanel {
 
     public FormularioEditarClienteVista(int id) {
         initComponents();
+        aplicarEstilos();
         cliente = controller.obtenerPorId(id);
         if (cliente == null) {
             panelFormulario.setVisible(false);
@@ -22,6 +25,24 @@ public class FormularioEditarClienteVista extends javax.swing.JPanel {
         } else {
             inicializarLogica();
         }
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarFormPanel(panelFormulario, "Datos");
+        UiStyle.estilizarError(lblNoEncontrado);
+        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(lblNombre);
+        UiStyle.estilizarInput(txtNombre);
+        UiStyle.estilizarCuerpo(lblApellido);
+        UiStyle.estilizarInput(txtApellido);
+        UiStyle.estilizarCuerpo(lblLimiteCredito);
+        UiStyle.estilizarInput(txtLimiteCredito);
+        UiStyle.estilizarCuerpo(lblEstado);
     }
 
     private void inicializarLogica() {

@@ -25,14 +25,6 @@ public class HomeAdminController {
         ventasController.abrirNuevaVenta(parent);
     }
 
-    public void abrirClientesCreditos(Component parent) {
-        ventasController.abrirClientesCreditos(parent);
-    }
-
-    public void abrirInventarioVentas(Component parent) {
-        ventasController.abrirInventario(parent);
-    }
-
     public void abrirFactura(Component parent) {
         ventasController.abrirFactura(parent);
     }
@@ -43,10 +35,6 @@ public class HomeAdminController {
 
     public void abrirNuevaCompra(Component parent) {
         comprasController.abrirNuevaCompra(parent);
-    }
-
-    public void abrirInventarioCompras(Component parent) {
-        comprasController.abrirInventario(parent);
     }
 
     public void abrirUsuarios(Component parent) {

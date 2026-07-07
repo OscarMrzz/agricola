@@ -6,6 +6,8 @@ import javax.swing.SwingUtilities;
 import com.mycompany.agricola.controllers.admin.usuarios.FormularioEditarUsuarioController;
 import com.mycompany.agricola.model.entity.RolEntity;
 import com.mycompany.agricola.model.entity.UsuarioEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarUsuarioVista extends javax.swing.JPanel {
 
@@ -14,6 +16,7 @@ public class FormularioEditarUsuarioVista extends javax.swing.JPanel {
 
     public FormularioEditarUsuarioVista(int id) {
         initComponents();
+        aplicarEstilos();
         usuario = controller.obtenerPorId(id);
         if (usuario == null) {
             panelFormulario.setVisible(false);
@@ -21,6 +24,24 @@ public class FormularioEditarUsuarioVista extends javax.swing.JPanel {
         } else {
             inicializarLogica();
         }
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarFormPanel(panelFormulario, "Datos");
+        UiStyle.estilizarError(lblNoEncontrado);
+        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(lblNombre);
+        UiStyle.estilizarInput(txtNombre);
+        UiStyle.estilizarCuerpo(lblPassword);
+        UiStyle.estilizarInput(txtPassword);
+        UiStyle.estilizarCuerpo(lblRol);
+        UiStyle.estilizarInput(cmbRol);
+        UiStyle.estilizarCuerpo(lblEstado);
     }
 
     private void inicializarLogica() {

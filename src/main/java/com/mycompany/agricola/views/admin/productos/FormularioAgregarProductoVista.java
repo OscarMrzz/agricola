@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.admin.productos.FormularioAgregarProductoController;
 import com.mycompany.agricola.model.entity.ProductoEntity;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioAgregarProductoVista extends javax.swing.JPanel {
 
@@ -19,7 +20,15 @@ public class FormularioAgregarProductoVista extends javax.swing.JPanel {
 
     public FormularioAgregarProductoVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarVistaFormulario(this, lblTitulo, btnGuardar, btnCancelar,
+                lblNombre, txtNombre, lblCategoria, txtCategoria,
+                lblDepartamento, txtDepartamento, lblPrecio, txtPrecio,
+                lblVencimiento, txtVencimiento);
     }
 
     private void inicializarLogica() {

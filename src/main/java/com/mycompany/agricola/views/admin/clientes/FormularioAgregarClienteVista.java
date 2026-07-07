@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.admin.clientes.FormularioAgregarClienteController;
 import com.mycompany.agricola.model.entity.ClienteEntity;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioAgregarClienteVista extends javax.swing.JPanel {
 
@@ -14,7 +15,14 @@ public class FormularioAgregarClienteVista extends javax.swing.JPanel {
 
     public FormularioAgregarClienteVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarVistaFormulario(this, lblTitulo, btnGuardar, btnCancelar,
+                lblNombre, txtNombre, lblApellido, txtApellido,
+                lblLimiteCredito, txtLimiteCredito, lblEstado);
     }
 
     private void inicializarLogica() {

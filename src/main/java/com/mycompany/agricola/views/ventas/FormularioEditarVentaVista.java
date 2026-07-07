@@ -5,6 +5,8 @@ import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.ventas.FormularioEditarVentaController;
 import com.mycompany.agricola.model.entity.VentaEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioEditarVentaVista extends javax.swing.JPanel {
 
@@ -13,7 +15,23 @@ public class FormularioEditarVentaVista extends javax.swing.JPanel {
 
     public FormularioEditarVentaVista(int id) {
         initComponents();
+        aplicarEstilos();
         inicializarLogica(id);
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarFormPanel(panelFormulario, "Datos");
+        UiStyle.estilizarError(lblError);
+        UiStyle.estilizarBoton(btnGuardar, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(btnCancelar, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(btnGuardar, UiIcons.SAVE);
+        UiStyle.conIcono(btnCancelar, UiIcons.CANCEL);
+        UiStyle.estilizarCuerpo(lblCantidad);
+        UiStyle.estilizarInput(txtCantidad);
+        UiStyle.estilizarCuerpo(lblMetodoPago);
+        UiStyle.estilizarInput(cmbMetodoPago);
     }
 
     private void inicializarLogica(int id) {

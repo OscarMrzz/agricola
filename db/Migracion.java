@@ -208,6 +208,18 @@ public class Migracion {
     private static void crearVistas(Connection conn) throws SQLException {
         String[] sqls = {
             """
+            CREATE OR ALTER VIEW vista_facturas_venta AS
+            SELECT v.no_factura,
+                MIN(v.fecha_venta) AS fecha_venta,
+                MAX(CONCAT(c.nombre_cliente, ' ', c.apellido_cliente)) AS cliente,
+                SUM(v.precio_antes_impuesto * v.cantidad_producto) AS subtotal,
+                SUM(v.impuesto) AS impuesto,
+                SUM(v.total_pagar) AS total
+            FROM ventas v
+            INNER JOIN clientes c ON v.id_cliente = c.id_cliente
+            GROUP BY v.no_factura
+            """,
+            """
             CREATE OR ALTER VIEW vista_ventas_detalle AS
             SELECT v.id_venta, v.no_factura,
                 CONCAT(c.nombre_cliente, ' ', c.apellido_cliente) AS cliente,
@@ -224,11 +236,22 @@ public class Migracion {
             SELECT co.id_compra, co.no_factura, co.fecha_compra, p.nombre_producto,
                 co.cantidad_compra AS cantidad_producto, co.metodo_pago,
                 co.precio_compra AS precio_unitario,
-                (co.precio_compra * co.cantidad_compra) AS subtotal,
+                (co.precio_compra * co.cantidad_compra) AS total_antes_impuesto,
                 (co.precio_compra * co.cantidad_compra) * 0.15 AS impuesto,
                 (co.precio_compra * co.cantidad_compra) * 1.15 AS total_a_pagar
             FROM compras co
             INNER JOIN productos p ON co.id_foranea_producto = p.id_producto
+            """,
+            """
+            CREATE OR ALTER VIEW vista_facturas_compra AS
+            SELECT co.no_factura,
+                MIN(co.fecha_compra) AS fecha_compra,
+                MAX(co.metodo_pago) AS metodo_pago,
+                SUM(co.precio_compra * co.cantidad_compra) AS subtotal,
+                SUM((co.precio_compra * co.cantidad_compra) * 0.15) AS impuesto,
+                SUM((co.precio_compra * co.cantidad_compra) * 1.15) AS total
+            FROM compras co
+            GROUP BY co.no_factura
             """,
             """
             CREATE OR ALTER VIEW vista_creditos_clientes AS

@@ -1,6 +1,13 @@
 package com.mycompany.agricola.views.admin;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
 import com.mycompany.agricola.controllers.admin.HomeAdminController;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
+import com.mycompany.agricola.views.util.UiTheme;
 
 public class HomeAdminVista extends javax.swing.JPanel {
 
@@ -8,19 +15,77 @@ public class HomeAdminVista extends javax.swing.JPanel {
 
     public HomeAdminVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarVistaHome(this, lblTitulo,
+                new javax.swing.JLabel[]{lblSeccionVentas, lblSeccionCompras, lblSeccionAdmin},
+                btnListadoVentas, btnNuevaVenta, btnFactura,
+                btnListadoCompras, btnNuevaCompra,
+                btnUsuarios, btnClientes, btnProductos, btnInventario, btnAlertar);
+        UiStyle.conIcono(btnListadoVentas, UiIcons.SALE);
+        UiStyle.conIcono(btnNuevaVenta, UiIcons.ADD);
+        UiStyle.conIcono(btnFactura, UiIcons.PDF);
+        UiStyle.conIcono(btnListadoCompras, UiIcons.PURCHASE);
+        UiStyle.conIcono(btnNuevaCompra, UiIcons.ADD);
+        UiStyle.conIcono(btnUsuarios, UiIcons.USERS);
+        UiStyle.conIcono(btnClientes, UiIcons.CLIENT);
+        UiStyle.conIcono(btnProductos, UiIcons.PRODUCTS);
+        UiStyle.conIcono(btnInventario, UiIcons.INVENTORY);
+        UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
+        reorganizarLayout();
+    }
+
+    private void reorganizarLayout() {
+        removeAll();
+        setLayout(new java.awt.BorderLayout());
+        UiStyle.aplicarPagina(this);
+
+        JPanel contenido = new JPanel();
+        contenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
+        contenido.setOpaque(false);
+
+        contenido.add(lblTitulo);
+        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_LG));
+
+        contenido.add(lblSeccionVentas);
+        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_SM));
+        contenido.add(filaBotones(btnListadoVentas, btnNuevaVenta, btnFactura));
+        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_LG));
+
+        contenido.add(lblSeccionCompras);
+        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_SM));
+        contenido.add(filaBotones(btnListadoCompras, btnNuevaCompra));
+        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_LG));
+
+        contenido.add(lblSeccionAdmin);
+        contenido.add(Box.createVerticalStrut(UiTheme.SPACE_SM));
+        contenido.add(filaBotones(btnUsuarios, btnClientes, btnProductos, btnInventario, btnAlertar));
+
+        add(contenido, java.awt.BorderLayout.NORTH);
+        revalidate();
+        repaint();
+    }
+
+    private JPanel filaBotones(javax.swing.JButton... botones) {
+        JPanel fila = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, UiTheme.SPACE_SM, 0));
+        fila.setOpaque(false);
+        fila.setAlignmentX(LEFT_ALIGNMENT);
+        for (javax.swing.JButton boton : botones) {
+            fila.add(boton);
+        }
+        return fila;
     }
 
     private void inicializarLogica() {
         btnListadoVentas.addActionListener(e -> controller.abrirListadoVentas(this));
         btnNuevaVenta.addActionListener(e -> controller.abrirNuevaVenta(this));
-        btnClientesCreditos.addActionListener(e -> controller.abrirClientesCreditos(this));
-        btnInventarioVentas.addActionListener(e -> controller.abrirInventarioVentas(this));
         btnFactura.addActionListener(e -> controller.abrirFactura(this));
 
         btnListadoCompras.addActionListener(e -> controller.abrirListadoCompras(this));
         btnNuevaCompra.addActionListener(e -> controller.abrirNuevaCompra(this));
-        btnInventarioCompras.addActionListener(e -> controller.abrirInventarioCompras(this));
 
         btnUsuarios.addActionListener(e -> controller.abrirUsuarios(this));
         btnClientes.addActionListener(e -> controller.abrirClientes(this));
@@ -37,13 +102,10 @@ public class HomeAdminVista extends javax.swing.JPanel {
         lblSeccionVentas = new javax.swing.JLabel();
         btnListadoVentas = new javax.swing.JButton();
         btnNuevaVenta = new javax.swing.JButton();
-        btnClientesCreditos = new javax.swing.JButton();
-        btnInventarioVentas = new javax.swing.JButton();
         btnFactura = new javax.swing.JButton();
         lblSeccionCompras = new javax.swing.JLabel();
         btnListadoCompras = new javax.swing.JButton();
         btnNuevaCompra = new javax.swing.JButton();
-        btnInventarioCompras = new javax.swing.JButton();
         lblSeccionAdmin = new javax.swing.JLabel();
         btnUsuarios = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
@@ -59,8 +121,6 @@ public class HomeAdminVista extends javax.swing.JPanel {
 
         btnListadoVentas.setText("Listado Ventas");
         btnNuevaVenta.setText("Nueva Venta");
-        btnClientesCreditos.setText("Clientes Creditos");
-        btnInventarioVentas.setText("Inventario Ventas");
         btnFactura.setText("Factura");
 
         lblSeccionCompras.setFont(new java.awt.Font("Arial", 1, 12));
@@ -68,7 +128,6 @@ public class HomeAdminVista extends javax.swing.JPanel {
 
         btnListadoCompras.setText("Listado Compras");
         btnNuevaCompra.setText("Nueva Compra");
-        btnInventarioCompras.setText("Inventario Compras");
 
         lblSeccionAdmin.setFont(new java.awt.Font("Arial", 1, 12));
         lblSeccionAdmin.setText("Administracion");
@@ -78,88 +137,13 @@ public class HomeAdminVista extends javax.swing.JPanel {
         btnProductos.setText("Productos");
         btnInventario.setText("Inventario");
         btnAlertar.setText("Alertar");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo)
-                    .addComponent(lblSeccionVentas)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnListadoVentas)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnNuevaVenta)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnClientesCreditos)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnInventarioVentas)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnFactura))
-                    .addComponent(lblSeccionCompras)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnListadoCompras)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnNuevaCompra)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnInventarioCompras))
-                    .addComponent(lblSeccionAdmin)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnUsuarios)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnClientes)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnProductos)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnInventario)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnAlertar)))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(lblSeccionVentas)
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnListadoVentas)
-                    .addComponent(btnNuevaVenta)
-                    .addComponent(btnClientesCreditos)
-                    .addComponent(btnInventarioVentas)
-                    .addComponent(btnFactura))
-                .addGap(18, 18, 18)
-                .addComponent(lblSeccionCompras)
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnListadoCompras)
-                    .addComponent(btnNuevaCompra)
-                    .addComponent(btnInventarioCompras))
-                .addGap(18, 18, 18)
-                .addComponent(lblSeccionAdmin)
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUsuarios)
-                    .addComponent(btnClientes)
-                    .addComponent(btnProductos)
-                    .addComponent(btnInventario)
-                    .addComponent(btnAlertar))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlertar;
     private javax.swing.JButton btnClientes;
-    private javax.swing.JButton btnClientesCreditos;
     private javax.swing.JButton btnFactura;
     private javax.swing.JButton btnInventario;
-    private javax.swing.JButton btnInventarioCompras;
-    private javax.swing.JButton btnInventarioVentas;
     private javax.swing.JButton btnListadoCompras;
     private javax.swing.JButton btnListadoVentas;
     private javax.swing.JButton btnNuevaCompra;

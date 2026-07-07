@@ -1,6 +1,8 @@
 package com.mycompany.agricola.views.ventas;
 
 import com.mycompany.agricola.controllers.ventas.HomeVentasController;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class HomeVentasVista extends javax.swing.JPanel {
 
@@ -8,7 +10,19 @@ public class HomeVentasVista extends javax.swing.JPanel {
 
     public HomeVentasVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarVistaHome(this, lblTitulo, null,
+                btnVentas, btnNuevaVenta, btnClientes, btnInventario, btnFactura, btnAlertar);
+        UiStyle.conIcono(btnVentas, UiIcons.SALE);
+        UiStyle.conIcono(btnNuevaVenta, UiIcons.ADD);
+        UiStyle.conIcono(btnClientes, UiIcons.CLIENT);
+        UiStyle.conIcono(btnInventario, UiIcons.INVENTORY);
+        UiStyle.conIcono(btnFactura, UiIcons.PDF);
+        UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
     }
 
     private void inicializarLogica() {

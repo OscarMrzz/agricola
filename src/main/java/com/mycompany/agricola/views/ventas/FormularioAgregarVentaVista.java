@@ -3,6 +3,7 @@ package com.mycompany.agricola.views.ventas;
 import java.io.FileOutputStream;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -17,6 +18,8 @@ import com.mycompany.agricola.model.entity.CreditosClientesDetalleEntity;
 import com.mycompany.agricola.model.entity.ProductoEntity;
 import com.mycompany.agricola.services.AuthService;
 import com.mycompany.agricola.services.CreditoExcedidoException;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 
 public class FormularioAgregarVentaVista extends javax.swing.JPanel {
 
@@ -25,10 +28,142 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
     private final FacturaController facturaController = new FacturaController();
     private DefaultTableModel modeloCarrito;
     private String ultimaFacturaGuardada;
+    private javax.swing.JButton btnEliminarFila;
 
     public FormularioAgregarVentaVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        UiStyle.aplicarPagina(this);
+        UiStyle.estilizarTitulo(lblTituloFormulario);
+        UiStyle.estilizarSeccion(lblTituloCarrito);
+        UiStyle.estilizarFormPanel(panelFormulario, "Datos");
+        UiStyle.estilizarFormPanel(panelCarrito, "Carrito");
+        UiStyle.estilizarTabla(tablaCarrito);
+        UiStyle.estilizarScrollTabla(scrollCarrito);
+        UiStyle.estilizarCuerpo(lblNoFactura);
+        UiStyle.estilizarCuerpo(lblNoFacturaValor);
+        UiStyle.estilizarCuerpo(lblProducto);
+        UiStyle.estilizarInput(cmbProducto);
+        UiStyle.estilizarCuerpo(lblCliente);
+        UiStyle.estilizarInput(cmbCliente);
+        UiStyle.estilizarCuerpo(lblCantidad);
+        UiStyle.estilizarInput(txtCantidad);
+        UiStyle.estilizarCuerpo(lblPrecioUnitario);
+        UiStyle.estilizarInput(txtPrecioUnitario);
+        UiStyle.estilizarCuerpo(lblMetodoPago);
+        UiStyle.estilizarInput(cmbMetodoPago);
+        UiStyle.estilizarCuerpo(lblSubtotalEtiqueta);
+        UiStyle.estilizarCuerpo(lblSubtotalLinea);
+        UiStyle.estilizarCuerpo(lblIsvEtiqueta);
+        UiStyle.estilizarCuerpo(lblIsvLinea);
+        UiStyle.estilizarCuerpo(lblTotalEtiqueta);
+        UiStyle.estilizarTotal(lblTotalLinea);
+        UiStyle.estilizarCuerpo(lblSubtotalFacturaEtiqueta);
+        UiStyle.estilizarCuerpo(lblSubtotalFactura);
+        UiStyle.estilizarCuerpo(lblIsvFacturaEtiqueta);
+        UiStyle.estilizarCuerpo(lblIsvFactura);
+        UiStyle.estilizarCuerpo(lblTotalFacturaEtiqueta);
+        UiStyle.estilizarTotal(lblTotalFactura);
+        UiStyle.estilizarBotonNav(btnAgregarCarrito);
+        UiStyle.estilizarBoton(btnGuardarVenta, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBotonNav(btnGenerarPdf);
+        UiStyle.estilizarBoton(btnVolver, UiStyle.TipoBoton.SECUNDARIO);
+        btnEliminarFila = new javax.swing.JButton("Eliminar fila");
+        UiStyle.estilizarBoton(btnEliminarFila, UiStyle.TipoBoton.PELIGRO);
+        UiStyle.conIcono(btnAgregarCarrito, UiIcons.CART);
+        UiStyle.conIcono(btnGuardarVenta, UiIcons.SAVE);
+        UiStyle.conIcono(btnGenerarPdf, UiIcons.PDF);
+        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.conIcono(btnEliminarFila, UiIcons.DELETE);
+        reorganizarLayout();
+    }
+
+    private void reorganizarLayout() {
+        panelFormulario.removeAll();
+        panelCarrito.removeAll();
+        this.removeAll();
+
+        panelFormulario.setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = java.awt.GridBagConstraints.WEST;
+        gbc.insets = new java.awt.Insets(0, 0, com.mycompany.agricola.views.util.UiTheme.SPACE_LG, 0);
+        panelFormulario.add(lblTituloFormulario, gbc);
+
+        agregarFilaFormulario(panelFormulario, gbc, 1, lblNoFactura, lblNoFacturaValor);
+        agregarFilaFormulario(panelFormulario, gbc, 2, lblProducto, cmbProducto);
+        agregarFilaFormulario(panelFormulario, gbc, 3, lblCliente, cmbCliente);
+        agregarFilaFormulario(panelFormulario, gbc, 4, lblCantidad, txtCantidad);
+        agregarFilaFormulario(panelFormulario, gbc, 5, lblPrecioUnitario, txtPrecioUnitario);
+        agregarFilaFormulario(panelFormulario, gbc, 6, lblMetodoPago, cmbMetodoPago);
+        agregarFilaFormulario(panelFormulario, gbc, 7, lblSubtotalEtiqueta, lblSubtotalLinea);
+        agregarFilaFormulario(panelFormulario, gbc, 8, lblIsvEtiqueta, lblIsvLinea);
+        agregarFilaFormulario(panelFormulario, gbc, 9, lblTotalEtiqueta, lblTotalLinea);
+
+        gbc.gridy = 10;
+        gbc.gridwidth = 2;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.insets = new java.awt.Insets(com.mycompany.agricola.views.util.UiTheme.SPACE_LG, 0,
+                com.mycompany.agricola.views.util.UiTheme.SPACE_MD, 0);
+        panelFormulario.add(btnAgregarCarrito, gbc);
+        gbc.gridy = 11;
+        gbc.insets = new java.awt.Insets(0, 0, 0, 0);
+        panelFormulario.add(btnVolver, gbc);
+
+        panelCarrito.setLayout(new java.awt.BorderLayout(0, com.mycompany.agricola.views.util.UiTheme.SPACE_MD));
+        JPanel contenidoCarrito = new javax.swing.JPanel(new java.awt.BorderLayout(0, com.mycompany.agricola.views.util.UiTheme.SPACE_MD));
+        contenidoCarrito.setOpaque(false);
+        contenidoCarrito.add(lblTituloCarrito, java.awt.BorderLayout.NORTH);
+        contenidoCarrito.add(scrollCarrito, java.awt.BorderLayout.CENTER);
+
+        JPanel totales = new javax.swing.JPanel(new java.awt.GridLayout(3, 2, com.mycompany.agricola.views.util.UiTheme.SPACE_MD,
+                com.mycompany.agricola.views.util.UiTheme.SPACE_SM));
+        totales.setOpaque(false);
+        totales.add(lblSubtotalFacturaEtiqueta);
+        totales.add(lblSubtotalFactura);
+        totales.add(lblIsvFacturaEtiqueta);
+        totales.add(lblIsvFactura);
+        totales.add(lblTotalFacturaEtiqueta);
+        totales.add(lblTotalFactura);
+        contenidoCarrito.add(totales, java.awt.BorderLayout.SOUTH);
+        panelCarrito.add(contenidoCarrito, java.awt.BorderLayout.CENTER);
+
+        JPanel barraCarrito = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT,
+                com.mycompany.agricola.views.util.UiTheme.SPACE_SM, 0));
+        barraCarrito.setOpaque(false);
+        barraCarrito.add(btnEliminarFila);
+        barraCarrito.add(btnGuardarVenta);
+        barraCarrito.add(btnGenerarPdf);
+        panelCarrito.add(barraCarrito, java.awt.BorderLayout.SOUTH);
+
+        setLayout(new java.awt.GridLayout(1, 2, com.mycompany.agricola.views.util.UiTheme.SPACE_LG, 0));
+        add(panelFormulario);
+        add(panelCarrito);
+        revalidate();
+        repaint();
+    }
+
+    private void agregarFilaFormulario(javax.swing.JPanel panel, java.awt.GridBagConstraints gbc, int fila,
+            javax.swing.JLabel etiqueta, java.awt.Component campo) {
+        gbc.gridy = fila;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
+        gbc.fill = java.awt.GridBagConstraints.NONE;
+        gbc.insets = new java.awt.Insets(0, 0, com.mycompany.agricola.views.util.UiTheme.SPACE_MD,
+                com.mycompany.agricola.views.util.UiTheme.SPACE_MD);
+        panel.add(etiqueta, gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.insets = new java.awt.Insets(0, 0, com.mycompany.agricola.views.util.UiTheme.SPACE_MD, 0);
+        panel.add(campo, gbc);
+        gbc.gridx = 0;
     }
 
     private void inicializarLogica() {
@@ -52,6 +187,7 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) { actualizarCalculosLinea(); }
         });
         btnAgregarCarrito.addActionListener(e -> agregarLinea());
+        btnEliminarFila.addActionListener(e -> eliminarFilaSeleccionada());
         btnGuardarVenta.addActionListener(e -> guardarVenta());
         btnGenerarPdf.addActionListener(e -> generarPdf());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
@@ -104,6 +240,17 @@ public class FormularioAgregarVentaVista extends javax.swing.JPanel {
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void eliminarFilaSeleccionada() {
+        int fila = tablaCarrito.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila del carrito", "Aviso",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        controller.eliminarLinea(fila);
+        actualizarTablaCarrito();
     }
 
     private void guardarVenta() {

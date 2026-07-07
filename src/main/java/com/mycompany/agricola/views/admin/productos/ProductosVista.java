@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.agricola.controllers.admin.productos.ProductosController;
 import com.mycompany.agricola.model.entity.ProductoEntity;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiUtil;
 
 public class ProductosVista extends javax.swing.JPanel {
@@ -16,10 +18,27 @@ public class ProductosVista extends javax.swing.JPanel {
     private final ProductosController controller = new ProductosController();
     private DefaultTableModel modelo;
     private List<ProductoEntity> productosCache = new ArrayList<>();
+    private javax.swing.JButton btnRefrescar;
 
     public ProductosVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        btnRefrescar = UiStyle.crearBotonRefrescar();
+        UiStyle.estilizarTabla(tablaProductos);
+        UiStyle.estilizarBotonNav(btnAgregar);
+        UiStyle.estilizarBotonNav(btnEditar);
+        UiStyle.estilizarBotonNav(btnEliminar);
+        UiStyle.estilizarBotonNav(btnVolver);
+        UiStyle.conIcono(btnAgregar, UiIcons.ADD);
+        UiStyle.conIcono(btnEditar, UiIcons.EDIT);
+        UiStyle.conIcono(btnEliminar, UiIcons.DELETE);
+        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        UiStyle.aplicarLayoutLista(this, lblTitulo, scrollTabla,
+                btnAgregar, btnEditar, btnEliminar, btnRefrescar, btnVolver);
     }
 
     private void inicializarLogica() {
@@ -32,9 +51,10 @@ public class ProductosVista extends javax.swing.JPanel {
         };
         tablaProductos.setModel(modelo);
         cargarDatos();
-        btnAgregar.addActionListener(e -> UiUtil.abrirFrame(new FormularioAgregarProductoVista(), "Agregar Producto"));
+        btnAgregar.addActionListener(e -> UiUtil.abrirFrameFormulario(new FormularioAgregarProductoVista(), "Agregar Producto"));
         btnEditar.addActionListener(e -> editarSeleccionado());
         btnEliminar.addActionListener(e -> eliminarSeleccionado());
+        btnRefrescar.addActionListener(e -> cargarDatos());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
     }
 
@@ -58,7 +78,7 @@ public class ProductosVista extends javax.swing.JPanel {
         int fila = UiUtil.obtenerFilaSeleccionada(tablaProductos);
         if (fila >= 0 && fila < productosCache.size()) {
             int id = productosCache.get(fila).getIdProducto();
-            UiUtil.abrirFrame(new FormularioEditarProductoVista(id), "Editar Producto");
+            UiUtil.abrirFrameFormulario(new FormularioEditarProductoVista(id), "Editar Producto");
         }
     }
 

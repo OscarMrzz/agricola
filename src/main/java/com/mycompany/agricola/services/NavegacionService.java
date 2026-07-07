@@ -43,7 +43,7 @@ public class NavegacionService {
 
     public void abrirFrame(JPanel panel, String titulo) {
         if (titulo != null && (titulo.contains("Agregar") || titulo.contains("Nueva"))) {
-            UiUtil.abrirFrame(panel, titulo, 1100, 620);
+            UiUtil.abrirFrame(panel, titulo, 1120, 680);
         } else {
             UiUtil.abrirFrame(panel, titulo);
         }

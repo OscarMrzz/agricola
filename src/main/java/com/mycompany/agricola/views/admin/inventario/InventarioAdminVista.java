@@ -3,6 +3,7 @@ package com.mycompany.agricola.views.admin.inventario;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -10,6 +11,8 @@ import com.mycompany.agricola.controllers.admin.inventario.InventarioAdminContro
 import com.mycompany.agricola.model.entity.AdvertenciaStockBajoEntity;
 import com.mycompany.agricola.model.entity.InventarioEntity;
 import com.mycompany.agricola.views.AlertasVista;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
 import com.mycompany.agricola.views.util.UiUtil;
 
 public class InventarioAdminVista extends javax.swing.JPanel {
@@ -18,10 +21,64 @@ public class InventarioAdminVista extends javax.swing.JPanel {
     private DefaultTableModel modeloInventario;
     private DefaultTableModel modeloAlertas;
     private List<InventarioEntity> inventarioCache = new ArrayList<>();
+    private javax.swing.JButton btnRefrescar;
 
     public InventarioAdminVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        btnRefrescar = UiStyle.crearBotonRefrescar();
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarSeccion(lblTituloAlertas);
+        UiStyle.estilizarTabla(tablaInventario);
+        UiStyle.estilizarTabla(tablaAlertas);
+        UiStyle.estilizarScrollTabla(scrollTablaInventario);
+        UiStyle.estilizarScrollTabla(scrollTablaAlertas);
+        UiStyle.estilizarBotonNav(btnEditar);
+        UiStyle.estilizarBotonNav(btnAlertar);
+        UiStyle.estilizarBotonNav(btnVolver);
+        UiStyle.conIcono(btnEditar, UiIcons.EDIT);
+        UiStyle.conIcono(btnAlertar, UiIcons.ALERT);
+        UiStyle.conIcono(btnVolver, UiIcons.BACK);
+        reorganizarLayout();
+    }
+
+    private void reorganizarLayout() {
+        removeAll();
+        setLayout(new java.awt.BorderLayout(0, com.mycompany.agricola.views.util.UiTheme.SPACE_LG));
+        UiStyle.aplicarPagina(this);
+
+        JPanel encabezado = new javax.swing.JPanel(new java.awt.BorderLayout(0, com.mycompany.agricola.views.util.UiTheme.SPACE_MD));
+        encabezado.setOpaque(false);
+        encabezado.add(lblTitulo, java.awt.BorderLayout.NORTH);
+
+        JPanel barra = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT,
+                com.mycompany.agricola.views.util.UiTheme.SPACE_SM, 0));
+        barra.setOpaque(false);
+        barra.add(btnEditar);
+        barra.add(btnAlertar);
+        barra.add(btnRefrescar);
+        barra.add(btnVolver);
+        encabezado.add(barra, java.awt.BorderLayout.CENTER);
+        add(encabezado, java.awt.BorderLayout.NORTH);
+
+        JPanel contenido = new javax.swing.JPanel(new java.awt.BorderLayout(0, com.mycompany.agricola.views.util.UiTheme.SPACE_XXL));
+        contenido.setOpaque(false);
+        contenido.add(scrollTablaInventario, java.awt.BorderLayout.CENTER);
+
+        JPanel seccionAlertas = new javax.swing.JPanel(new java.awt.BorderLayout(0, com.mycompany.agricola.views.util.UiTheme.SPACE_MD));
+        seccionAlertas.setOpaque(false);
+        seccionAlertas.add(lblTituloAlertas, java.awt.BorderLayout.NORTH);
+        seccionAlertas.add(scrollTablaAlertas, java.awt.BorderLayout.CENTER);
+        contenido.add(seccionAlertas, java.awt.BorderLayout.SOUTH);
+        scrollTablaAlertas.setPreferredSize(new java.awt.Dimension(0, 180));
+
+        add(contenido, java.awt.BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 
     private void inicializarLogica() {
@@ -48,7 +105,13 @@ public class InventarioAdminVista extends javax.swing.JPanel {
 
         btnEditar.addActionListener(e -> editarSeleccionado());
         btnAlertar.addActionListener(e -> UiUtil.abrirFrame(new AlertasVista(), "Alertas"));
+        btnRefrescar.addActionListener(e -> refrescarDatos());
         btnVolver.addActionListener(e -> SwingUtilities.getWindowAncestor(this).dispose());
+    }
+
+    private void refrescarDatos() {
+        cargarDatos();
+        cargarAlertas();
     }
 
     private void cargarDatos() {
@@ -81,7 +144,7 @@ public class InventarioAdminVista extends javax.swing.JPanel {
         int fila = UiUtil.obtenerFilaSeleccionada(tablaInventario);
         if (fila >= 0 && fila < inventarioCache.size()) {
             int id = inventarioCache.get(fila).getIdInventario();
-            UiUtil.abrirFrame(new FormularioEditarInventarioVista(id), "Editar Stock Minimo");
+            UiUtil.abrirFrameFormulario(new FormularioEditarInventarioVista(id), "Editar Stock Minimo");
         }
     }
 

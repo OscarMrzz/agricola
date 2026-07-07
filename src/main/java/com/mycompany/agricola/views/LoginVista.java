@@ -1,12 +1,21 @@
 package com.mycompany.agricola.views;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import com.mycompany.agricola.controllers.LoginController;
 import com.mycompany.agricola.model.entity.UsuarioEntity;
 import com.mycompany.agricola.services.AuthService;
 import com.mycompany.agricola.services.NavegacionService;
+import com.mycompany.agricola.views.util.FormPanel;
+import com.mycompany.agricola.views.util.UiStyle;
+import com.mycompany.agricola.views.util.UiTheme;
 
 public class LoginVista extends javax.swing.JPanel {
 
@@ -14,7 +23,67 @@ public class LoginVista extends javax.swing.JPanel {
 
     public LoginVista() {
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        removeAll();
+        setLayout(new BorderLayout());
+        UiStyle.aplicarDialogo(this);
+
+        lblTitulo.setText("Distribuidora Agricola");
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        UiStyle.estilizarTitulo(lblTitulo);
+
+        UiStyle.estilizarCuerpo(lblUsuario);
+        UiStyle.estilizarCuerpo(lblPassword);
+        UiStyle.estilizarInput(txtUsuario);
+        UiStyle.estilizarInput(txtPassword);
+        UiStyle.estilizarBoton(btnLogin, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.conIcono(btnLogin, com.mycompany.agricola.views.util.UiIcons.LOGIN);
+
+        FormPanel panelFormulario = new FormPanel("Acceso");
+        panelFormulario.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_XXL, 0);
+        panelFormulario.add(lblTitulo, gbc);
+
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_MD, UiTheme.SPACE_MD);
+        panelFormulario.add(lblUsuario, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_MD, 0);
+        panelFormulario.add(txtUsuario, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_LG, UiTheme.SPACE_MD);
+        panelFormulario.add(lblPassword, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_LG, 0);
+        panelFormulario.add(txtPassword, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(UiTheme.SPACE_MD, 0, 0, 0);
+        panelFormulario.add(btnLogin, gbc);
+
+        add(panelFormulario, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 
     private void inicializarLogica() {
@@ -33,7 +102,8 @@ public class LoginVista extends javax.swing.JPanel {
         javax.swing.JFrame frame = new javax.swing.JFrame("Agricola - " + AuthService.getRolNombre());
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.add(navegacion.determinarHomeInicial());
-        frame.setSize(900, 600);
+        frame.setSize(960, 640);
+        frame.setMinimumSize(new java.awt.Dimension(960, 640));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -63,37 +133,11 @@ public class LoginVista extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(40, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUsuario)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPassword)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnLogin)
-                .addContainerGap(20, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

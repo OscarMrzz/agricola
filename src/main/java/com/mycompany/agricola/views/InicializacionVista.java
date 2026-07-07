@@ -1,12 +1,21 @@
 package com.mycompany.agricola.views;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import com.mycompany.agricola.controllers.InicializacionController;
+import com.mycompany.agricola.views.util.FormPanel;
+import com.mycompany.agricola.views.util.UiIcons;
+import com.mycompany.agricola.views.util.UiStyle;
+import com.mycompany.agricola.views.util.UiTheme;
 import com.mycompany.agricola.views.util.UiUtil;
 
 public class InicializacionVista extends javax.swing.JPanel {
@@ -17,7 +26,48 @@ public class InicializacionVista extends javax.swing.JPanel {
     public InicializacionVista(JFrame frame) {
         this.frame = frame;
         initComponents();
+        aplicarEstilos();
         inicializarLogica();
+    }
+
+    private void aplicarEstilos() {
+        removeAll();
+        setLayout(new BorderLayout());
+        UiStyle.aplicarDialogo(this);
+
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        UiStyle.estilizarTitulo(lblTitulo);
+        UiStyle.estilizarCuerpo(lblMensaje);
+        lblMensaje.setHorizontalAlignment(SwingConstants.CENTER);
+
+        UiStyle.estilizarBoton(btnBlanco, UiStyle.TipoBoton.PRIMARIO);
+        UiStyle.estilizarBoton(btnPrueba, UiStyle.TipoBoton.SECUNDARIO);
+        UiStyle.conIcono(btnBlanco, UiIcons.INIT);
+        UiStyle.conIcono(btnPrueba, UiIcons.INIT);
+
+        FormPanel panelFormulario = new FormPanel("Configuracion inicial");
+        panelFormulario.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_LG, 0);
+
+        gbc.gridy = 0;
+        panelFormulario.add(lblTitulo, gbc);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_XXL, 0);
+        panelFormulario.add(lblMensaje, gbc);
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 0, UiTheme.SPACE_MD, 0);
+        panelFormulario.add(btnBlanco, gbc);
+        gbc.gridy = 3;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        panelFormulario.add(btnPrueba, gbc);
+
+        add(panelFormulario, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 
     private void inicializarLogica() {
@@ -43,7 +93,7 @@ public class InicializacionVista extends javax.swing.JPanel {
                 try {
                     get();
                     UiUtil.mostrarVistaEnFrame(frame, new LoginVista(), "Distribuidora Agricola - Login",
-                            new Dimension(450, 200));
+                            new Dimension(480, 300));
                 } catch (Exception ex) {
                     setBotonesHabilitados(true);
                     JOptionPane.showMessageDialog(InicializacionVista.this,
@@ -68,42 +118,20 @@ public class InicializacionVista extends javax.swing.JPanel {
         btnBlanco = new javax.swing.JButton();
         btnPrueba = new javax.swing.JButton();
 
-        lblTitulo.setFont(new java.awt.Font("Arial Black", 1, 16));
-        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitulo.setText("Distribuidora Agricola");
-
-        lblMensaje.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMensaje.setText("Bienvenido. Configure la base de datos para comenzar.");
-
         btnBlanco.setText("Iniciar con datos en blanco");
-
         btnPrueba.setText("Iniciar con datos de prueba");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblMensaje, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBlanco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnPrueba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(lblMensaje)
-                .addGap(18, 18, 18)
-                .addComponent(btnBlanco)
-                .addGap(12, 12, 12)
-                .addComponent(btnPrueba)
-                .addContainerGap(20, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
